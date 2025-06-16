@@ -62,11 +62,15 @@ const MOCK_CLONES = [
   },
 ];
 
-// Modal component consistent with cyber theme
+/**
+ * Modal component restyled with light theme, deep and light teals, drop shadow,
+ * accessible standout close button, rounded corners, padding, and themed typography.
+ * Uses: main white surface, deep teal header/border, teal accent highlights, box shadow.
+ */
 function ReportModal({ open, onClose }) {
   const modalRef = useRef();
 
-  // Close modal when clicking outside the modal content
+  // Close modal when clicking outside
   useEffect(() => {
     function handleClick(e) {
       if (open && modalRef.current && !modalRef.current.contains(e.target)) {
@@ -102,7 +106,7 @@ function ReportModal({ open, onClose }) {
         left: 0,
         width: "100vw",
         height: "100vh",
-        background: "rgba(20,34,36,0.67)",
+        background: "rgba(12,34,36,0.50)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -115,21 +119,25 @@ function ReportModal({ open, onClose }) {
         role="document"
         tabIndex={0}
         style={{
-          minWidth: 320,
-          maxWidth: "91vw",
-          background: "linear-gradient(113deg, #191a2e 87%, #0d0f1e 100%)",
-          border: "2px solid var(--primary)",
-          borderRadius: 18,
-          boxShadow: "0 0 44px 16px #0ff6, 0 0 18px 5px #f0f8 inset",
-          color: "#fff",
-          fontFamily: "'Montserrat',Poppins,sans-serif",
-          padding: "38px 25px 28px",
+          minWidth: 325,
+          maxWidth: "96vw",
+          background: "var(--background)",
+          border: "2.7px solid var(--primary)",
+          borderTop: "17px solid var(--primary)",
+          borderRadius: "20px",
+          boxShadow:
+            "0 4px 32px 0 rgba(19,185,185,0.16), 0 8px 56px 0 rgba(5,92,92,0.20)",
+          color: "var(--text-primary)",
+          fontFamily:
+            "'Poppins','Montserrat','Lato','Raleway','Arial',sans-serif",
+          padding: "36px 28px 32px",
           zIndex: 10001,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           position: "relative",
           outline: "none",
+          transition: "box-shadow 0.22s",
         }}
       >
         <button
@@ -137,66 +145,86 @@ function ReportModal({ open, onClose }) {
           aria-label="Close report dialog"
           style={{
             position: "absolute",
-            top: 16,
-            right: 19,
-            background: "transparent",
+            top: 12,
+            right: 14,
+            background: "var(--accent)",
+            color: "#fff",
             border: "none",
-            fontSize: "1.5rem",
-            color: "var(--accent)",
+            borderRadius: "50%",
+            width: 38,
+            height: 38,
+            fontSize: "1.6rem",
+            fontWeight: 800,
+            lineHeight: "1",
+            boxShadow: "0 0 0 4px var(--surface), 0 4px 16px 2px var(--primary)",
             cursor: "pointer",
-            fontWeight: 700,
-            textShadow: "0 0 10px var(--primary),0 0 4px var(--secondary)",
-            transition: "color 0.17s",
+            zIndex: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "background 0.18s, color 0.14s, box-shadow 0.18s",
+            outline: "none",
+          }}
+          onKeyDown={e => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onClose();
+            }
           }}
         >
-          ×
+          <span aria-hidden="true">&times;</span>
         </button>
         <div
           style={{
-            fontWeight: 700,
-            fontSize: "1.32em",
+            fontWeight: 900,
+            fontSize: "1.41em",
             color: "var(--primary)",
-            letterSpacing: ".04em",
-            marginBottom: 12,
-            textShadow: "0 0 12px var(--accent), 0 0 8px var(--surface)",
+            letterSpacing: ".05em",
+            marginBottom: 13,
+            marginTop: 8,
+            textShadow: "0 0 10px var(--accent), 0 0 5px var(--surface)",
             textAlign: "center",
+            fontFamily: "'Merriweather','Montserrat','Poppins',serif",
           }}
+          id="report-modal-title"
         >
           Report Submitted
         </div>
         <div
           style={{
-            color: "var(--accent)",
-            fontFamily: "'Montserrat',Poppins,sans-serif",
+            color: "var(--text-secondary)",
+            fontFamily: "'Montserrat','Poppins','Lato',sans-serif",
             fontSize: "1.12em",
-            background:
-              "linear-gradient(89deg, var(--surface) 70%, #0ff2 100%)",
-            padding: "15px 12px",
-            borderRadius: 8,
+            background: "var(--surface)",
+            padding: "15px 15px",
+            borderRadius: "10px",
             fontWeight: 600,
             textAlign: "center",
-            marginBottom: 8,
-            letterSpacing: ".02em",
-            boxShadow:
-              "0 0 10px 1.5px #0ff, 0 0 3px 1.5px #191a2e inset",
+            marginBottom: 14,
+            marginTop: 2,
+            letterSpacing: ".03em",
+            border: "1.5px solid var(--accent)",
+            boxShadow: "0 3px 16px 0 var(--accent), 0 0 0.5px 1.5px #13b9b934 inset",
           }}
         >
-          reported necessary action will be taken
+          Your report has been recorded. Our team will review and take necessary action.
         </div>
         <button
           className="btn"
           style={{
-            marginTop: 18,
-            padding: "10px 28px",
-            background: "linear-gradient(90deg, #0ff, #f0f 94%)",
-            color: "#181a2e",
-            fontWeight: 700,
-            borderRadius: 9,
-            fontFamily: "'Montserrat',Poppins,sans-serif",
-            fontSize: "1.1em",
+            marginTop: 16,
+            padding: "11px 42px",
+            background:
+              "linear-gradient(94deg, var(--primary) 62%, var(--secondary) 100%)",
+            color: "#fff",
+            fontWeight: 800,
+            borderRadius: 11,
+            fontFamily: "'Montserrat','Poppins',sans-serif",
+            fontSize: "1.11em",
             border: "none",
-            boxShadow: "0 0 11px var(--secondary)",
-            letterSpacing: ".02em",
+            boxShadow:
+              "0 0 22px -3px var(--primary), 0 0 13px 2px var(--secondary)",
+            letterSpacing: ".04em",
             cursor: "pointer",
             outline: "none",
             transition: "background 0.18s",
@@ -207,13 +235,29 @@ function ReportModal({ open, onClose }) {
           Close
         </button>
       </div>
-      {/* Minimal modal animation style */}
+      {/* Modal accessibility/visual animation style */}
       <style>
         {`
-        @keyframes fadeIn {
-          0% { opacity: 0; }
-          100% { opacity: 1; }
-        }
+          @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+          }
+          .cyber-modal:focus {
+            outline: 2.5px solid var(--primary);
+            box-shadow: 0 0 0 2px var(--accent), 0 0 18px 3px var(--primary);
+          }
+          .cyber-modal button[aria-label="Close report dialog"]:focus {
+            box-shadow: 0 0 0 4px var(--primary), 0 0 18px 4px var(--accent);
+            outline: 3px solid var(--accent);
+          }
+          .cyber-modal button[aria-label="Close report dialog"]:hover {
+            background: var(--primary);
+            color: #fff;
+          }
+          .cyber-modal .btn:focus, .cyber-modal .btn:active {
+            box-shadow: 0 0 0 2.3px var(--accent), 0 0 12px 3px var(--primary);
+            outline: 2.2px solid var(--accent);
+          }
         `}
       </style>
     </div>

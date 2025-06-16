@@ -1,20 +1,24 @@
-:root {
-  /* Futuristic cyber palette */
-  --primary: #0ff;
-  --secondary: #f0f;
-  --accent: #0ff;
-  --background: #141622;
-  --surface: #222436;
-  --text-primary: #eafffd;
-  --text-secondary: #aaeef7;
-  /* Shadow, border, utility */
-  --border-color: #343656;
-  --border-radius: 8px;
-  --box-shadow: 0 2px 16px 0 rgba(0,255,255,0.07), 0 2px 40px 0 rgba(240,0,255,0.08);
-  --focus-glow: 0 0 0 2px var(--primary), 0 0 16px 2px var(--secondary);
+/* 
+  @import Google Fonts for global usage.
+  If self-hosting is preferred, replace with local font files.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Lato:wght@400;700&family=Raleway:wght@400;700&display=swap');
 
-  /* Legacy tokens for built-in components (optional) */
-  --kavia-orange: #E87A41;
+:root {
+  /* PrivSecure AI - white, deep teal (primary), and light teal (accent) theme */
+  --primary: #055C5C;          /* Deep teal */
+  --secondary: #13B9B9;        /* Light teal */
+  --accent: #13B9B9;           /* Light teal accent */
+  --background: #fff;          /* White background */
+  --surface: #F6FBFB;          /* Very light teal surface */
+  --text-primary: #0C2223;     /* Near-black deep teal */
+  --text-secondary: #358C8B;   /* Muted light teal (optimizing contrast) */
+  --border-color: #C5E7E7;     /* Gentle border color (light teal) */
+  --border-radius: 8px;
+  --box-shadow: 0 2px 16px 0 rgba(19,185,185,0.08), 0 2px 40px 0 rgba(5,92,92,0.10);
+  --focus-glow: 0 0 0 2px var(--primary), 0 0 12px 2px var(--secondary);
+
+  --kavia-orange: #E87A41; /* Legacy/obsolete, safe to remove later */
   --kavia-dark: #1A1A1A;
 }
 
@@ -22,16 +26,17 @@
 html {
   font-size: 16px;
   background: var(--background);
+  font-family: 'Poppins', 'Merriweather', 'Montserrat', 'Lato', 'Raleway', Arial, Helvetica, sans-serif;
 }
 ::selection {
   background: var(--accent);
-  color: #141622;
+  color: var(--text-primary);
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-family: 'Poppins', 'Merriweather', 'Montserrat', 'Lato', 'Raleway', Arial, Helvetica, sans-serif;
   background: var(--background);
   color: var(--text-primary);
   min-height: 100vh;
@@ -427,103 +432,278 @@ code {
   font-weight: 700;
 }
 
+/* Remove old/duplicate styles. 
+   Ensure all headings, utility classes, and interactive elements consistently use the theme and font stack. */
+
 body {
   margin: 0;
-  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  background-color: var(--base-dark);
-  color: var(--text-color);
+  padding: 0;
+  font-family: 'Poppins', 'Merriweather', 'Montserrat', 'Lato', 'Raleway', Arial, Helvetica, sans-serif;
+  background: var(--background);
+  color: var(--text-primary);
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
 }
 
+/* App & Layout Containers */
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--background);
 }
-
 .navbar {
-  background-color: var(--base-dark);
-  padding: 16px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+  padding: 16px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 2px solid var(--border-color);
   position: fixed;
   top: 0;
   width: 100%;
   box-sizing: border-box;
   z-index: 100;
+  box-shadow: var(--box-shadow);
 }
 
+/* Branding & Logo */
 .logo {
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 8px;
+  font-family: 'Montserrat', 'Poppins', 'Lato', 'Raleway', Arial, sans-serif;
+  color: var(--primary);
+  text-shadow: 0 0 3px var(--accent), 0 0 12px var(--secondary);
 }
 
 .logo-symbol {
-  color: var(--base-light);
+  color: var(--accent);
 }
 
+/* Utility Container */
 .container {
-  max-width: 900px;
+  max-width: 980px;
   margin: 0 auto;
   padding: 0 24px;
   width: 100%;
   box-sizing: border-box;
+  font-family: 'Poppins', 'Montserrat', 'Lato', 'Raleway', Arial, sans-serif;
 }
 
-.hero {
-  padding-top: 120px;
-  padding-bottom: 64px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
+/* Typography base styles */
+.title, h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', 'Montserrat', 'Poppins', 'Lato', 'Raleway', Arial, sans-serif;
+  color: var(--text-primary);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.3em;
 }
-
-.subtitle {
-  color: var(--base-light);
-  font-weight: 500;
-  font-size: 1.1rem;
-}
-
+/* Strong font for .title */
 .title {
   font-size: 3.5rem;
-  font-weight: 600;
-  line-height: 1.2;
+  font-weight: 800;
+  line-height: 1.1;
   margin: 0;
 }
 
-.description {
-  font-size: 1.1rem;
-  line-height: 1.5;
+.subtitle {
+  color: var(--secondary);
+  font-family: 'Montserrat', 'Poppins', 'Lato', 'Raleway', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: 0.09em;
+  text-shadow: 0 0 8px var(--accent);
+}
+
+.description, p {
+  font-family: 'Poppins', 'Montserrat', 'Lato', 'Raleway', Arial, sans-serif;
+  font-size: 1.14rem;
+  line-height: 1.55;
   color: var(--text-secondary);
   max-width: 600px;
   margin-bottom: 16px;
 }
 
-.btn {
-  background-color: var(--base-light);
-  color: white;
+/* Button styles */
+.btn, button {
+  background: linear-gradient(92deg, var(--primary), var(--secondary) 80%);
+  color: #fff;
   border: none;
-  border-radius: 4px;
-  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  padding: 12px 28px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: 'Montserrat', 'Poppins', 'Lato', 'Raleway', Arial, sans-serif;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  box-shadow: var(--box-shadow);
+  transition: background 0.17s, color 0.17s, box-shadow 0.17s;
+  outline: none;
 }
-
-.btn:hover {
-  background-color: #7691ff;
-}
-
 .btn-large {
-  padding: 12px 24px;
-  font-size: 1.1rem;
+  padding: 16px 38px;
+  font-size: 1.18rem;
+  letter-spacing: 0.06em;
+}
+.btn:hover, button.btn:hover {
+  background: linear-gradient(90deg, var(--secondary), var(--primary) 80%);
+  color: var(--primary);
+  box-shadow: 0 0 14px 2px var(--accent);
+  filter: brightness(1.08);
+}
+button[disabled], .btn[disabled] {
+  background: #e9eef0;
+  color: var(--text-secondary);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Link and Focus styles */
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-family: 'Poppins', 'Montserrat', 'Lato', 'Raleway', Arial, sans-serif;
+}
+a:hover {
+  color: var(--secondary);
+  text-shadow: 0 0 8px var(--accent), 0 0 2px var(--secondary);
+}
+
+/* Inputs, selects, textareas, code -- themed for scheme and font */
+input, textarea, select {
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 8px 12px;
+  outline: none;
+  transition: border 0.18s;
+  margin-bottom: 8px;
+  font-family: inherit;
+}
+input:focus, textarea:focus, select:focus {
+  border: 1.5px solid var(--primary);
+  box-shadow: var(--focus-glow);
+}
+code {
+  font-family: "Fira Mono", "JetBrains Mono", Consolas, monospace;
+  background: #edf3f7;
+  color: var(--primary);
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+/* Card/surface styles for widgets and blocks */
+.card, .surface {
+  background: var(--surface);
+  color: var(--text-primary);
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  padding: 24px 28px;
+  margin: 18px 0;
+  border: 1.5px solid var(--border-color);
+  font-family: 'Poppins', 'Montserrat', 'Lato', 'Raleway', Arial, sans-serif;
+  transition: background 0.3s;
+}
+
+/* Animations, scrollbar, and others retain theme */
+body::-webkit-scrollbar {
+  width: 12px;
+  background: var(--surface);
+}
+body::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: 8px;
+  box-shadow: 0 0 4px 0 var(--primary) inset;
+}
+
+/* SIDEBAR styling: use deep teal/white, update typography. */
+.ps-sidebar {
+  background: linear-gradient(160deg, var(--background) 60%, var(--surface) 98%);
+  border-right: 1.5px solid var(--border-color);
+  min-width: 230px;
+  max-width: 260px;
+  box-shadow: 8px 0 18px -12px var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+  padding: 28px 0 18px 0;
+  position: relative;
+  z-index: 30;
+}
+@media (max-width: 800px) {
+  .ps-sidebar {
+    min-width: 54px;
+    max-width: 70px;
+    padding: 16px 0 10px 0;
+    box-shadow: 4px 0 14px -10px var(--accent);
+  }
+}
+.ps-sidebar-header {
+  text-align: left;
+  padding: 0 28px 12px 32px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--primary);
+  letter-spacing: 0.07em;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.ps-sidebar-title {
+  text-shadow: 0 0 7px var(--secondary), 0 0 2px var(--primary);
+}
+.ps-sidebar-link {
+  display: block;
+  padding: 10px 13px 10px 8px;
+  border-radius: 6px 16px 16px 6px;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  text-shadow: 0 0 7px var(--accent), 0 0 2px var(--surface);
+  font-family: 'Montserrat', 'Poppins', 'Lato', 'Raleway', Arial, sans-serif;
+  font-weight: 500;
+  transition: color 0.16s, background 0.17s, box-shadow 0.15s;
+  letter-spacing: 0.03em;
+  position: relative;
+}
+.ps-sidebar-link.active,
+.ps-sidebar-link:hover {
+  color: var(--primary);
+  background: linear-gradient(90deg,#F6FBFB 40%, var(--surface) 100%);
+  box-shadow: 0 0 8px 1px var(--secondary), 0 0 2px var(--primary);
+}
+.ps-sidebar-link::before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  width: 4px;
+  background: var(--accent);
+  border-radius: 7px;
+  transform: scaleY(0);
+  position: absolute;
+  left: 0; top: 0;
+  transition: transform 0.12s;
+}
+.ps-sidebar-link.active::before,
+.ps-sidebar-link:hover::before {
+  transform: scaleY(1);
+}
+
+/* Utility: Divider and HR */
+hr, .divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 24px 0;
+}
+
+/* Selection color */
+::selection {
+  background: var(--secondary);
+  color: var(--background);
 }

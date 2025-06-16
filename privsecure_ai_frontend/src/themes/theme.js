@@ -5,16 +5,16 @@
 //
 
 const theme = {
-  primary: "#0ff",
-  secondary: "#f0f",
-  accent: "#0ff",
-  background: "#141622",
-  surface: "#222436",
-  textPrimary: "#eafffd",
-  textSecondary: "#aaeef7",
-  border: "#343656",
+  primary: "#055C5C",      // Deep teal
+  secondary: "#13B9B9",    // Light teal
+  accent: "#13B9B9",       // Light teal accent
+  background: "#fff",      // White
+  surface: "#F6FBFB",      // Very light teal
+  textPrimary: "#0C2223",  // Near-black/deep teal
+  textSecondary: "#358C8B",// Muted light teal
+  border: "#C5E7E7",       // Light teal border
   borderRadius: "8px",
-  boxShadow: "0 2px 16px 0 rgba(0,255,255,0.07), 0 2px 40px 0 rgba(240,0,255,0.08)",
+  boxShadow: "0 2px 16px 0 rgba(19,185,185,0.08), 0 2px 40px 0 rgba(5,92,92,0.10)",
 };
 
 export default theme;

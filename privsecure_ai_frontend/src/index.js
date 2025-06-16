@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 
-// Future: Change './App' to './pages' or specific entry page if App is moved.
+// App now handles all routing; root render remains unchanged.
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

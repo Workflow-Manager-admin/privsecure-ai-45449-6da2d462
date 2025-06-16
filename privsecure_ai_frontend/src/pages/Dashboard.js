@@ -1,5 +1,5 @@
 import React from "react";
-import { ExposureScoreCard, WeeklyTrendGraph } from "../widgets";
+import { ExposureScoreCard, WeeklyTrendGraph, RealTimeAlertsPanel } from "../widgets";
 
 /**
  * PUBLIC_INTERFACE
@@ -27,7 +27,8 @@ function Dashboard() {
       }}>
         <ExposureScoreCard />
         <WeeklyTrendGraph />
-        {/* Other dashboard widgets: Real-time AlertsPanel, PrivacyTip will go here */}
+        <RealTimeAlertsPanel />
+        {/* Other dashboard widgets: PrivacyTip will go here */}
       </div>
     </div>
   );

@@ -126,6 +126,157 @@ code {
   background: var(--background);
 }
 
+/* =============================== */
+/* PrivSecure AI Sidebar & Layout  */
+/* =============================== */
+
+.ps-mainlayout {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  min-height: 100vh;
+  background: var(--background);
+  transition: grid-template-columns 0.2s;
+}
+@media (max-width: 800px) {
+  .ps-mainlayout {
+    grid-template-columns: 60px 1fr;
+  }
+}
+@media (max-width: 520px) {
+  .ps-mainlayout {
+    grid-template-columns: 1fr;
+  }
+  .ps-sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0; z-index: 120;
+    width: 80vw;
+    min-width: 160px;
+    max-width: 280px;
+    box-shadow: 2px 0 22px 0 var(--accent);
+    transform: translateX(-101%);
+    transition: transform 0.22s;
+    background: var(--surface);
+  }
+  /* Show sidebar if a class .open is present */
+  .ps-sidebar.open {
+    transform: translateX(0);
+  }
+  .ps-mainlayout-content {
+    padding-left: 0 !important;
+  }
+}
+
+/* Sidebar styling */
+.ps-sidebar {
+  background: linear-gradient(160deg, var(--surface), #191a31 98%);
+  border-right: 1.5px solid var(--border-color);
+  min-width: 230px;
+  max-width: 260px;
+  box-shadow: 8px 0 18px -12px var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+  padding: 28px 0 18px 0;
+  position: relative;
+  z-index: 30;
+}
+@media (max-width: 800px) {
+  .ps-sidebar {
+    min-width: 54px;
+    max-width: 70px;
+    padding: 16px 0 10px 0;
+    box-shadow: 4px 0 14px -10px var(--accent);
+  }
+}
+.ps-sidebar-header {
+  text-align: left;
+  padding: 0 28px 12px 32px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--primary);
+  letter-spacing: 0.07em;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+@media (max-width: 800px) {
+  .ps-sidebar-header {
+    padding: 0 12px 10px 12px;
+    font-size: 0.99rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+}
+.ps-sidebar-title {
+  text-shadow: 0 0 7px var(--secondary), 0 0 2px var(--primary);
+}
+.ps-sidebar-nav ul {
+  list-style: none;
+  padding: 0 0 0 26px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+@media (max-width: 800px) {
+  .ps-sidebar-nav ul {
+    padding-left: 8px;
+    gap: 5px;
+  }
+}
+.ps-sidebar-link {
+  display: block;
+  padding: 10px 13px 10px 8px;
+  border-radius: 6px 16px 16px 6px;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  text-shadow: 0 0 9px var(--accent), 0 0 2px var(--surface);
+  font-weight: 500;
+  transition: color 0.18s, background 0.19s, box-shadow 0.18s;
+  letter-spacing: 0.03em;
+  position: relative;
+}
+.ps-sidebar-link::before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  width: 4px;
+  background: var(--accent);
+  border-radius: 7px;
+  transform: scaleY(0);
+  position: absolute;
+  left: 0; top: 0;
+  transition: transform 0.14s;
+}
+.ps-sidebar-link.active,
+.ps-sidebar-link:hover {
+  color: var(--primary);
+  background: linear-gradient(90deg,#191a36 30%, var(--surface) 100%);
+  box-shadow: 0 0 8px 1px var(--accent), 0 0 2px var(--secondary);
+}
+.ps-sidebar-link.active::before,
+.ps-sidebar-link:hover::before {
+  transform: scaleY(1);
+}
+
+.ps-mainlayout-content {
+  padding: 44px 6vw 32px 2vw;
+  min-height: 100vh;
+  background: var(--background);
+  transition: padding 0.18s;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+@media (max-width: 800px) {
+  .ps-mainlayout-content {
+    padding: 38px 1vw 28px 1vw;
+  }
+}
+
 .navbar {
   background: linear-gradient(90deg, #181a2e 0%, #222436 80%);
   padding: 18px 0 18px 0;

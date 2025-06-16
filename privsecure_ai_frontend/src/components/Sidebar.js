@@ -16,7 +16,6 @@ const navLinks = [
   { path: "/social-graph", label: "Social Graph Risk Map" },
   { path: "/disintegration", label: "Data Disintegration" },
   { path: "/badges", label: "Badge System" },
-  { path: "/privacy-manifesto", label: "Privacy Manifesto" },
   { path: "/settings", label: "Settings & Reports" },
 ];
 

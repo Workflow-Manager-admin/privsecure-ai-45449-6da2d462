@@ -11,7 +11,6 @@ import {
   SocialGraph,
   Disintegration,
   Badges,
-  PrivacyManifesto,
   Settings,
   Login,
   Onboarding,

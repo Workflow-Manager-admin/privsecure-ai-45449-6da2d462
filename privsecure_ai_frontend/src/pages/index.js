@@ -13,3 +13,4 @@ export { default as Badges } from "./Badges";
 export { default as Settings } from "./Settings";
 export { default as Login } from "./Login";
 export { default as Onboarding } from "./Onboarding";
+export { default as About } from "./About";

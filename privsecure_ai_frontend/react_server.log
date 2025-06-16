@@ -23,4 +23,57 @@ modules by path ./.ve/ 15.1 KiB
     ./.ve/EditorOverlay.css 2.25 KiB [built] [code generated]
     ./node_modules/css-loader/dist/cjs.js!./.ve/EditorOverlay.css 697 bytes [built] [code generated]
   ./.ve/EditorOverlay.jsx 1.58 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 2703 ms
+webpack 5.99.9 compiled successfully in 2637 ms
+assets by status 682 bytes [cached] 1 asset
+assets by path *.js 3.45 MiB
+  asset bundle.js 3.44 MiB [emitted] (name: main)
+  asset main.8ab3eaa6cf4c4ff8b5d1.hot-update.js 12.7 KiB [emitted] [immutable] [hmr] (name: main)
+asset main.8ab3eaa6cf4c4ff8b5d1.hot-update.json 28 bytes [emitted] [immutable] [hmr]
+Entrypoint main 3.45 MiB = bundle.js 3.44 MiB main.8ab3eaa6cf4c4ff8b5d1.hot-update.js 12.7 KiB
+cached modules 2.44 MiB [cached] 629 modules
+runtime modules 28.7 KiB 15 modules
+./src/App.js 6.59 KiB [built] [code generated]
+webpack 5.99.9 compiled successfully in 142 ms
+assets by status 682 bytes [cached] 1 asset
+assets by path *.js 3.45 MiB
+  asset bundle.js 3.44 MiB [emitted] (name: main)
+  asset main.b8a5f4e96f69857987a9.hot-update.js 13.1 KiB [emitted] [immutable] [hmr] (name: main)
+asset main.b8a5f4e96f69857987a9.hot-update.json 28 bytes [emitted] [immutable] [hmr]
+Entrypoint main 3.45 MiB = bundle.js 3.44 MiB main.b8a5f4e96f69857987a9.hot-update.js 13.1 KiB
+cached modules 2.44 MiB [cached] 629 modules
+runtime modules 28.7 KiB 15 modules
+./src/App.js 6.8 KiB [built] [code generated]
+
+WARNING in ./src/App.js 173:37-42
+export 'About' (imported as 'About') was not found in './pages' (possible exports: ActionPlan, Badges, DarkWebLeaks, Dashboard, DigitalTwin, Disintegration, Login, Onboarding, Settings, SocialGraph, ThirdPartyApps)
+ @ ./src/index.js 5:0-24 13:32-35
+
+webpack 5.99.9 compiled with 1 warning in 108 ms
+assets by status 682 bytes [cached] 1 asset
+assets by path *.js 3.45 MiB
+  asset bundle.js 3.44 MiB [emitted] (name: main)
+  asset main.8cf3b95174d667339921.hot-update.js 5.02 KiB [emitted] [immutable] [hmr] (name: main)
+asset main.8cf3b95174d667339921.hot-update.json 28 bytes [emitted] [immutable] [hmr]
+Entrypoint main 3.45 MiB = bundle.js 3.44 MiB main.8cf3b95174d667339921.hot-update.js 5.02 KiB
+cached modules 2.44 MiB [cached] 629 modules
+runtime modules 28.7 KiB 15 modules
+./src/components/Sidebar.js 2.42 KiB [built] [code generated]
+
+WARNING in ./src/App.js 173:37-42
+export 'About' (imported as 'About') was not found in './pages' (possible exports: ActionPlan, Badges, DarkWebLeaks, Dashboard, DigitalTwin, Disintegration, Login, Onboarding, Settings, SocialGraph, ThirdPartyApps)
+ @ ./src/index.js 5:0-24 13:32-35
+
+webpack 5.99.9 compiled with 1 warning in 124 ms
+assets by status 682 bytes [cached] 1 asset
+assets by path *.js 3.47 MiB
+  asset bundle.js 3.45 MiB [emitted] (name: main)
+  asset main.9cded5a5eb4080a0b41c.hot-update.js 15.7 KiB [emitted] [immutable] [hmr] (name: main)
+asset main.9cded5a5eb4080a0b41c.hot-update.json 28 bytes [emitted] [immutable] [hmr]
+Entrypoint main 3.47 MiB = bundle.js 3.45 MiB main.9cded5a5eb4080a0b41c.hot-update.js 15.7 KiB
+cached modules 2.43 MiB [cached] 628 modules
+runtime modules 28.7 KiB 15 modules
+javascript modules 15.7 KiB
+  ./src/App.js 6.8 KiB [code generated]
+  ./src/pages/index.js 731 bytes [built] [code generated]
+  ./src/pages/About.js 8.16 KiB [built] [code generated]
+webpack 5.99.9 compiled successfully in 147 ms

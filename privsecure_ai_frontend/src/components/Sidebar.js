@@ -17,6 +17,7 @@ const navLinks = [
   { path: "/disintegration", label: "Data Disintegration" },
   { path: "/badges", label: "Badge System" },
   { path: "/settings", label: "Settings & Reports" },
+  { path: "/about", label: "About" },
 ];
 // No Privacy Manifesto link present in navigation.
 

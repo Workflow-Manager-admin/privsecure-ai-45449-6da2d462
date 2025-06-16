@@ -14,6 +14,7 @@ import {
   Settings,
   Login,
   Onboarding,
+  About,
 } from "./pages";
 
 // PUBLIC_INTERFACE
@@ -109,6 +110,7 @@ function App() {
           <Route path="/disintegration" element={<Disintegration />} />
           <Route path="/badges" element={<Badges />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/about" element={<About />} />
         </Route>
         {/* Fallback: redirect to appropriate page */}
         <Route

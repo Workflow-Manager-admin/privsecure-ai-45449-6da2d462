@@ -557,9 +557,22 @@ function AppCard({ app, onRevokeClick, onReplaceClick, revoked, replaced, replac
   );
 }
 
-// Modal for alternative apps (accessible, themed)
-function AlternativeAppsModal({ open, onClose, app, onReplace, alternatives }) {
+/*
+  Enhanced AlternativeAppsModal: 
+  - Implements three key Replace flow actions: 
+    1) Install [App] (simulate, UI change) 
+    2) View detailed comparison (in-place sub-modal dialog) 
+    3) Revoke old & Install new (simulate both, update UI, reward points)
+*/
+
+function AlternativeAppsModal({ open, onClose, app, onReplace, alternatives, onReplaceAdvanced }) {
   const containerRef = useRef(null);
+
+  // State for advanced actions
+  const [installingId, setInstallingId] = useState(null); // alt.id that's currently "installing"
+  const [showComparisonId, setShowComparisonId] = useState(null); // alt.id that's being compared
+  const [revokeInstallId, setRevokeInstallId] = useState(null); // alt.id doing both
+  const [simStep, setSimStep] = useState(""); // step state
 
   // Accessible close on Esc
   useEffect(() => {
@@ -580,8 +593,147 @@ function AlternativeAppsModal({ open, onClose, app, onReplace, alternatives }) {
 
   if (!open || !app) return null;
   const category = APP_CATEGORIES[app.name] || "cloud";
-  // If no alternatives: fallback to cloud
   const appAlternatives = alternatives || ALTERNATIVE_APPS[category] || [];
+
+  // Mock detailed features for demo (expandable for each alt)
+  const MOCK_FEATURE_COMPARISON = (alt) => [
+    { label: 'End-to-End Encryption', alt: alt.features.includes("End-to-end encryption") || alt.features.includes("Zero-knowledge") ? "✔️" : "—", orig: app.trust > 70 ? "✔️" : "—" },
+    { label: 'Open Source', alt: alt.features.join(' ').toLowerCase().includes("open") ? "✔️" : "—", orig: app.trustLabel === "High" ? "✔️" : "—" },
+    { label: 'Ads/Tracking', alt: alt.features.some(f => /ad|tracking/i.test(f)) ? "Yes" : "No", orig: "Yes" },
+    { label: 'Federated/Decentralized', alt: alt.features.find(f => /decentralized|federated/i.test(f)) ? "✔️" : "—", orig: "—" },
+    { label: 'Cloud sync', alt: alt.features.includes("Cloud sync") ? "✔️" : "—", orig: "✔️" },
+  ];
+
+  // Simulate install by UI step
+  function handleInstallClick(alt) {
+    setInstallingId(alt.id);
+    setSimStep("install");
+    setTimeout(() => setSimStep("installed"), 870);
+    setTimeout(() => {
+      setInstallingId(null);
+      setSimStep("");
+    }, 1850);
+  }
+
+  // Simulate revoke & install
+  function handleRevokeInstall(alt) {
+    setRevokeInstallId(alt.id);
+    setSimStep("revoke");
+    setTimeout(() => setSimStep("install"), 700);
+    setTimeout(() => setSimStep("installed"), 1720);
+    setTimeout(() => {
+      setRevokeInstallId(null);
+      setSimStep("");
+      // Actually call parent to update replaced
+      onReplaceAdvanced && onReplaceAdvanced(alt);
+    }, 2200);
+  }
+
+  // Show submodal/pane with feature comparison
+  function handleCompareOpen(alt) {
+    setShowComparisonId(alt.id);
+  }
+  function handleCompareClose() {
+    setShowComparisonId(null);
+  }
+
+  // For submodal overlay for feature comparison
+  function ComparisonModal({ alt, open, onClose }) {
+    if (!open || !alt) return null;
+    const comparisonRows = MOCK_FEATURE_COMPARISON(alt);
+    return (
+      <div
+        role="dialog"
+        aria-modal="true"
+        tabIndex={-1}
+        style={{
+          position: "fixed",
+          zIndex: 30100,
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          background: "rgba(12,34,36,0.57)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          animation: "fadeIn 0.13s",
+        }}
+        onClick={onClose}
+      >
+        <div
+          tabIndex={0}
+          style={{
+            minWidth: 333,
+            maxWidth: "90vw",
+            background: "var(--background)",
+            border: "2.2px solid var(--accent)",
+            borderTop: "14px solid var(--primary)",
+            borderRadius: "19px",
+            boxShadow: "0 4px 34px 0 rgba(19,185,185,0.23), 0 9px 36px 0 rgba(5,92,92,0.15)",
+            color: "var(--text-primary)",
+            padding: "28px 30px 24px 30px",
+            zIndex: 30501,
+            display: "flex",
+            flexDirection: "column",
+            position: "relative",
+            transition: "box-shadow 0.15s",
+            outline: "none",
+          }}
+          onClick={e => e.stopPropagation()}
+        >
+          <button
+            onClick={onClose}
+            aria-label="Close comparison"
+            style={{
+              position: "absolute", top: 9, right: 13,
+              background: "var(--accent)", color: "#fff",
+              border: "none", borderRadius: "50%",
+              width: 35, height: 35, fontWeight: 800,
+              fontSize: "1.34em", cursor: "pointer",
+              boxShadow: "0 0 0 2px var(--background), 0 0 18px 1.5px var(--primary)"
+            }}
+          >
+            ×
+          </button>
+          <div style={{
+            fontWeight: 600, fontSize: "1.18em",
+            color: "var(--primary)", letterSpacing: ".04em",
+            marginBottom: 11, marginTop: 1,
+            textShadow: "0 0 8px var(--accent), 0 0 4px var(--surface)",
+            fontFamily: "'Montserrat', 'Poppins', serif"
+          }}>
+            Feature Comparison: {alt.name} vs {app.name}
+          </div>
+          <table style={{
+            borderCollapse: "collapse", width: "100%",
+            fontSize: ".98em",
+            marginBottom: 6,
+          }}>
+            <thead>
+              <tr>
+                <th style={{ textAlign: "left", padding: "3px 9px 3px 0", color: "var(--secondary)", borderBottom: "1.2px solid var(--border-color)" }}>Feature</th>
+                <th style={{ textAlign: "center", color: "var(--primary)" }}>{alt.name}</th>
+                <th style={{ textAlign: "center", color: "var(--primary)" }}>{app.name}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparisonRows.map((row, idx) => (
+                <tr key={row.label}>
+                  <td style={{ fontWeight: 600, color: "var(--text-primary)", padding: "5px 9px 5px 0" }}>{row.label}</td>
+                  <td style={{ textAlign: "center", color: "var(--accent)" }}>{row.alt}</td>
+                  <td style={{ textAlign: "center", color: "#888" }}>{row.orig}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div style={{ fontSize: ".96em", marginTop: 12, color: "var(--text-secondary)", letterSpacing: ".02em" }}>
+            Choose a privacy-forward alternative for enhanced protection and bonus points!
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
@@ -659,9 +811,19 @@ function AlternativeAppsModal({ open, onClose, app, onReplace, alternatives }) {
                 padding: "14px 13px", gap: 15,
                 marginBottom: 2,
                 width: "100%",
-                maxWidth: 540
+                maxWidth: 540,
+                position: "relative"
               }}
             >
+              {/* Comparison Sub-modal */}
+              {showComparisonId === alt.id && (
+                <ComparisonModal
+                  alt={alt}
+                  open={showComparisonId === alt.id}
+                  onClose={handleCompareClose}
+                />
+              )}
+
               <img src={alt.logo} alt={alt.name + " logo"} style={{
                 width: 48, height: 48, borderRadius: 9,
                 border: "2px solid var(--primary)",
@@ -702,35 +864,85 @@ function AlternativeAppsModal({ open, onClose, app, onReplace, alternatives }) {
                 </div>
               </div>
               <div style={{
-                display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, minWidth: 100
+                display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 7, minWidth: 135
               }}>
-                <a
-                  href={alt.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn"
-                  style={{
-                    background: "linear-gradient(93deg, var(--primary) 62%, var(--secondary) 100%)",
-                    color: "#fff",
-                    borderRadius: 8, fontSize: '.98em',
-                    fontWeight: 700,
-                    padding: "8px 14px", boxShadow: "0 0 9px 2px var(--primary)",
-                    marginBottom: 4, textAlign: "center", outline: "none", display: "block"
-                  }}
-                >
-                  Download / Learn More
-                </a>
+                {/* 1. Install only */}
                 <button
                   className="btn"
                   style={{
-                    background: "linear-gradient(98deg, #e4fff0, var(--accent))",
-                    color: "var(--primary)", border: "1.2px solid var(--primary)",
-                    borderRadius: 8, fontWeight: 700,
-                    padding: "8px 14px", outline: "none",
+                    background: installingId === alt.id
+                      ? "linear-gradient(94deg, #baffee 62%, #c6f5ea 98%)"
+                      : "linear-gradient(93deg, var(--primary) 62%, var(--secondary) 100%)",
+                    color: installingId === alt.id ? "var(--primary)" : "#fff",
+                    borderRadius: 8,
+                    fontSize: '.98em',
+                    fontWeight: 700,
+                    padding: "8px 16px",
+                    marginBottom: 3,
+                    outline: "none",
+                    display: "block",
+                    opacity: revokeInstallId === alt.id ? 0.64 : 1,
+                    pointerEvents: revokeInstallId === alt.id ? "none" : "auto",
                   }}
-                  onClick={() => onReplace(alt)}
+                  disabled={!!installingId || !!revokeInstallId}
+                  onClick={() => !installingId && handleInstallClick(alt)}
+                  aria-label={`Install ${alt.name} (simulate)`}
                 >
-                  Replace with {alt.name}
+                  {installingId === alt.id
+                    ? simStep === "installed" ? "Installed!" : "Installing…"
+                    : `Install ${alt.name}`}
+                </button>
+
+                {/* 2. Show comparison */}
+                <button
+                  className="btn"
+                  style={{
+                    background: "linear-gradient(100deg, #f1fff4 10%, #eaf7fc 95%)",
+                    color: "var(--primary)",
+                    border: "1.2px solid var(--primary)",
+                    borderRadius: 8,
+                    fontWeight: 700,
+                    padding: "7px 14px",
+                    outline: "none",
+                    display: "block",
+                    fontSize: ".97em",
+                  }}
+                  onClick={() => handleCompareOpen(alt)}
+                  aria-label={`Show comparison for ${alt.name}`}
+                  disabled={!!installingId || !!revokeInstallId}
+                >
+                  View detailed comparison
+                </button>
+
+                {/* 3. Revoke & Install */}
+                <button
+                  className="btn"
+                  style={{
+                    background:
+                      revokeInstallId === alt.id
+                        ? "linear-gradient(86deg, #e0fcfa 70%, #d4ffe6 99%)"
+                        : "linear-gradient(91deg, #e3fcea 12%, #b0fff1 95%)",
+                    color: "var(--primary)",
+                    filter: revokeInstallId === alt.id ? "brightness(1.13)" : "none",
+                    fontWeight: 900,
+                    border: "1.5px solid var(--accent)",
+                    borderRadius: 8,
+                    marginTop: 3,
+                    padding: "9px 14px",
+                    outline: "none",
+                    fontSize: "1.01em",
+                  }}
+                  onClick={() => !revokeInstallId && handleRevokeInstall(alt)}
+                  disabled={!!installingId || !!revokeInstallId}
+                  aria-label={`Revoke & install ${alt.name} (simulate)`}
+                >
+                  {revokeInstallId === alt.id
+                    ? simStep === "installed"
+                      ? "Replaced!"
+                      : simStep === "revoke"
+                        ? "Revoking old app…"
+                        : "Installing new app…"
+                    : `Revoke old app & Install new one`}
                 </button>
               </div>
             </div>
@@ -832,22 +1044,27 @@ function ThirdPartyApps() {
 
   // Handler for Replace click (open alternative modal)
   const handleReplaceClick = (app) => {
-    // Determine alternative apps to show by category
     const cat = APP_CATEGORIES[app.name] || "cloud";
     setAlternatives(ALTERNATIVE_APPS[cat] || []);
     setModal({ open: true, app, type: "replace" });
   };
 
-  // Handler: on replacement action, update & close modal
+  // Handler: on basic replacement (not advanced flow), fallback
   const handleReplaceWith = (altApp) => {
+    // fallback: legacy, single click replace, not used in new modal
+    handleReplaceWithAdvanced(altApp);
+  };
+
+  // Advanced replace: triggered by "Revoke old & Install new" button
+  const handleReplaceWithAdvanced = (altApp) => {
     const origId = modal.app.id;
     setModal({ open: false, app: null, type: null });
     setReplacedIds(prev => ({ ...prev, [origId]: true }));
     setReplacedMap(prev => ({ ...prev, [origId]: altApp }));
     setReplaceSuccess({ show: true, altApp, origApp: modal.app });
     setTimeout(() => setReplaceSuccess({ show: false, altApp: null, origApp: null }), 6000);
-    // Optionally boost privacy score
-    setScore(prev => Math.min(100, prev + 5));
+    // Award privacy point(s)
+    setScore(prev => Math.min(100, prev + 7)); // Give slightly more for the full flow
   };
 
   // Handler: close any modal
@@ -916,6 +1133,7 @@ function ThirdPartyApps() {
           app={modal.app}
           onClose={handleModalCancel}
           onReplace={handleReplaceWith}
+          onReplaceAdvanced={handleReplaceWithAdvanced}
           alternatives={alternatives}
         />
       );

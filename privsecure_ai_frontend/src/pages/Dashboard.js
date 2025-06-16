@@ -1,5 +1,5 @@
 import React from "react";
-import { ExposureScoreCard } from "../widgets";
+import { ExposureScoreCard, WeeklyTrendGraph } from "../widgets";
 
 /**
  * PUBLIC_INTERFACE
@@ -26,7 +26,8 @@ function Dashboard() {
         alignItems: "flex-start"
       }}>
         <ExposureScoreCard />
-        {/* Other dashboard widgets: WeeklyTrend, AlertsPanel, PrivacyTip—will go here */}
+        <WeeklyTrendGraph />
+        {/* Other dashboard widgets: Real-time AlertsPanel, PrivacyTip will go here */}
       </div>
     </div>
   );

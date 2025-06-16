@@ -565,7 +565,7 @@ function AppCard({ app, onRevokeClick, onReplaceClick, revoked, replaced, replac
     3) Revoke old & Install new (simulate both, update UI, reward points)
 */
 
-function AlternativeAppsModal({ open, onClose, app, onReplace, alternatives, onReplaceAdvanced }) {
+function AlternativeAppsModal({ open, onClose, app, onReplace, alternatives, onReplaceAdvanced, onSimInstall }) {
   const containerRef = useRef(null);
 
   // State for advanced actions
@@ -604,37 +604,38 @@ function AlternativeAppsModal({ open, onClose, app, onReplace, alternatives, onR
     { label: 'Cloud sync', alt: alt.features.includes("Cloud sync") ? "✔️" : "—", orig: "✔️" },
   ];
 
-  // Simulate install by UI step
+  // 1. Main user action: Install [Alternative App] (simulate as a "switch" and replace in app-list)
   function handleInstallClick(alt) {
     setInstallingId(alt.id);
     setSimStep("install");
-    setTimeout(() => setSimStep("installed"), 870);
+    setTimeout(() => setSimStep("installed"), 900);
     setTimeout(() => {
       setInstallingId(null);
       setSimStep("");
-    }, 1850);
+      // Actually simulate install: swap app in main app-list, award points, UI feedback
+      typeof onSimInstall === "function" && onSimInstall(alt);
+    }, 1750);
   }
 
-  // Simulate revoke & install
-  function handleRevokeInstall(alt) {
-    setRevokeInstallId(alt.id);
-    setSimStep("revoke");
-    setTimeout(() => setSimStep("install"), 700);
-    setTimeout(() => setSimStep("installed"), 1720);
-    setTimeout(() => {
-      setRevokeInstallId(null);
-      setSimStep("");
-      // Actually call parent to update replaced
-      onReplaceAdvanced && onReplaceAdvanced(alt);
-    }, 2200);
-  }
-
-  // Show submodal/pane with feature comparison
+  // 2. View detailed comparison (submodal)
   function handleCompareOpen(alt) {
     setShowComparisonId(alt.id);
   }
   function handleCompareClose() {
     setShowComparisonId(null);
+  }
+
+  // 3. Revoke & Install (double step: revoke old, then install new, mark app as replaced)
+  function handleRevokeInstall(alt) {
+    setRevokeInstallId(alt.id);
+    setSimStep("revoke");
+    setTimeout(() => setSimStep("install"), 600);
+    setTimeout(() => setSimStep("installed"), 1700);
+    setTimeout(() => {
+      setRevokeInstallId(null);
+      setSimStep("");
+      onReplaceAdvanced && onReplaceAdvanced(alt);
+    }, 2200);
   }
 
   // For submodal overlay for feature comparison
@@ -1051,20 +1052,40 @@ function ThirdPartyApps() {
 
   // Handler: on basic replacement (not advanced flow), fallback
   const handleReplaceWith = (altApp) => {
-    // fallback: legacy, single click replace, not used in new modal
+    // legacy pathway: treat as advanced replacement for compatibility
     handleReplaceWithAdvanced(altApp);
+  };
+
+  // Handler for just "Install" (simulate install/switch: marks app as replaced and awards basic points)
+  const handleSimInstall = (altApp) => {
+    const origId = modal.app.id;
+    setModal({ open: false, app: null, type: null });
+
+    // Mark replaced, update replacement mapping for this app
+    setReplacedIds(prev => ({ ...prev, [origId]: true }));
+    setReplacedMap(prev => ({ ...prev, [origId]: altApp }));
+
+    setReplaceSuccess({ show: true, altApp, origApp: modal.app });
+    setTimeout(() => setReplaceSuccess({ show: false, altApp: null, origApp: null }), 6000);
+
+    // Award standard privacy points (less than revoke+install)
+    setScore(prev => Math.min(100, prev + 3));
   };
 
   // Advanced replace: triggered by "Revoke old & Install new" button
   const handleReplaceWithAdvanced = (altApp) => {
     const origId = modal.app.id;
     setModal({ open: false, app: null, type: null });
+
+    // Mark replaced, update replacement mapping
     setReplacedIds(prev => ({ ...prev, [origId]: true }));
     setReplacedMap(prev => ({ ...prev, [origId]: altApp }));
+
     setReplaceSuccess({ show: true, altApp, origApp: modal.app });
     setTimeout(() => setReplaceSuccess({ show: false, altApp: null, origApp: null }), 6000);
-    // Award privacy point(s)
-    setScore(prev => Math.min(100, prev + 7)); // Give slightly more for the full flow
+
+    // Award more privacy points for extra secure flow
+    setScore(prev => Math.min(100, prev + 7));
   };
 
   // Handler: close any modal
@@ -1134,6 +1155,7 @@ function ThirdPartyApps() {
           onClose={handleModalCancel}
           onReplace={handleReplaceWith}
           onReplaceAdvanced={handleReplaceWithAdvanced}
+          onSimInstall={handleSimInstall}
           alternatives={alternatives}
         />
       );

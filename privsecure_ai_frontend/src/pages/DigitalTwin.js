@@ -194,8 +194,8 @@ function DigitalTwin() {
                 }}>
                   {m.content}
                 </div>
-                {/* Actions Row */}
-                <div style={{ display: "flex", gap: 11 }}>
+                {/* Actions Row: Only Report button (centered where appropriate) */}
+                <div style={{ display: "flex", gap: 0 }}>
                   <button
                     className="btn"
                     style={{
@@ -205,29 +205,15 @@ function DigitalTwin() {
                       borderRadius: 8,
                       padding: "7.5px 18px",
                       boxShadow: "0 0 8px 2px var(--primary)",
-                      letterSpacing: ".03em"
+                      letterSpacing: ".03em",
+                      marginLeft: 0,
+                      marginRight: 0,
+                      minWidth: 92,
                     }}
                     onClick={() => handleAction("report", m)}
                     aria-label={`Report impersonation of ${m.name}`}
                   >
                     Report
-                  </button>
-                  <button
-                    className="btn"
-                    style={{
-                      background: "linear-gradient(90deg, #23232b 80%, #0ff1 99%)",
-                      color: "var(--primary)",
-                      fontWeight: 600,
-                      border: "1.5px solid var(--accent)",
-                      borderRadius: 8,
-                      padding: "7.5px 18px",
-                      opacity: 0.74,
-                      letterSpacing: ".03em"
-                    }}
-                    onClick={() => handleAction("ignore", m)}
-                    aria-label={`Ignore impersonation of ${m.name}`}
-                  >
-                    Ignore
                   </button>
                 </div>
               </div>
@@ -327,7 +313,7 @@ function DigitalTwin() {
                     fontSize: "1.13em"
                   }}>{c.matchScore}%</span>
                 </div>
-                <div style={{ display: "flex", gap: 8 }}>
+                <div style={{ display: "flex", gap: 0 }}>
                   <button
                     className="btn"
                     style={{
@@ -337,29 +323,15 @@ function DigitalTwin() {
                       background: "linear-gradient(90deg, #0ff, #f0f 95%)",
                       borderRadius: 8,
                       boxShadow: "0 0 7px 2px var(--primary)",
-                      letterSpacing: ".03em"
+                      letterSpacing: ".03em",
+                      minWidth: 85,
+                      marginLeft: 0,
+                      marginRight: 0,
                     }}
                     onClick={() => handleAction("report", c)}
                     aria-label={`Report clone: ${c.source}`}
                   >
                     Report
-                  </button>
-                  <button
-                    className="btn"
-                    style={{
-                      background: "linear-gradient(90deg, #31354a 40%, #0ff1 100%)",
-                      color: "var(--primary)",
-                      fontWeight: 600,
-                      border: "1.5px solid var(--accent)",
-                      borderRadius: 8,
-                      padding: "6.5px 17px",
-                      opacity: 0.72,
-                      letterSpacing: ".03em"
-                    }}
-                    onClick={() => handleAction("ignore", c)}
-                    aria-label={`Ignore clone: ${c.source}`}
-                  >
-                    Ignore
                   </button>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 /**
  * PUBLIC_INTERFACE
@@ -62,14 +62,178 @@ const MOCK_CLONES = [
   },
 ];
 
+// Modal component consistent with cyber theme
+function ReportModal({ open, onClose }) {
+  const modalRef = useRef();
+
+  // Close modal when clicking outside the modal content
+  useEffect(() => {
+    function handleClick(e) {
+      if (open && modalRef.current && !modalRef.current.contains(e.target)) {
+        onClose();
+      }
+    }
+    if (open) {
+      document.addEventListener("mousedown", handleClick);
+    }
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open, onClose]);
+
+  // Trap focus when modal is open
+  useEffect(() => {
+    if (open) {
+      const prev = document.activeElement;
+      modalRef.current && modalRef.current.focus();
+      return () => prev && prev.focus && prev.focus();
+    }
+  }, [open]);
+
+  if (!open) return null;
+  return (
+    <div
+      className="cyber-modal-backdrop"
+      aria-modal="true"
+      role="dialog"
+      tabIndex={-1}
+      style={{
+        position: "fixed",
+        zIndex: 9999,
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        background: "rgba(20,34,36,0.67)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        animation: "fadeIn 0.18s",
+      }}
+    >
+      <div
+        className="cyber-modal"
+        ref={modalRef}
+        role="document"
+        tabIndex={0}
+        style={{
+          minWidth: 320,
+          maxWidth: "91vw",
+          background: "linear-gradient(113deg, #191a2e 87%, #0d0f1e 100%)",
+          border: "2px solid var(--primary)",
+          borderRadius: 18,
+          boxShadow: "0 0 44px 16px #0ff6, 0 0 18px 5px #f0f8 inset",
+          color: "#fff",
+          fontFamily: "'Montserrat',Poppins,sans-serif",
+          padding: "38px 25px 28px",
+          zIndex: 10001,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          position: "relative",
+          outline: "none",
+        }}
+      >
+        <button
+          onClick={onClose}
+          aria-label="Close report dialog"
+          style={{
+            position: "absolute",
+            top: 16,
+            right: 19,
+            background: "transparent",
+            border: "none",
+            fontSize: "1.5rem",
+            color: "var(--accent)",
+            cursor: "pointer",
+            fontWeight: 700,
+            textShadow: "0 0 10px var(--primary),0 0 4px var(--secondary)",
+            transition: "color 0.17s",
+          }}
+        >
+          ×
+        </button>
+        <div
+          style={{
+            fontWeight: 700,
+            fontSize: "1.32em",
+            color: "var(--primary)",
+            letterSpacing: ".04em",
+            marginBottom: 12,
+            textShadow: "0 0 12px var(--accent), 0 0 8px var(--surface)",
+            textAlign: "center",
+          }}
+        >
+          Report Submitted
+        </div>
+        <div
+          style={{
+            color: "var(--accent)",
+            fontFamily: "'Montserrat',Poppins,sans-serif",
+            fontSize: "1.12em",
+            background:
+              "linear-gradient(89deg, var(--surface) 70%, #0ff2 100%)",
+            padding: "15px 12px",
+            borderRadius: 8,
+            fontWeight: 600,
+            textAlign: "center",
+            marginBottom: 8,
+            letterSpacing: ".02em",
+            boxShadow:
+              "0 0 10px 1.5px #0ff, 0 0 3px 1.5px #191a2e inset",
+          }}
+        >
+          reported necessary action will be taken
+        </div>
+        <button
+          className="btn"
+          style={{
+            marginTop: 18,
+            padding: "10px 28px",
+            background: "linear-gradient(90deg, #0ff, #f0f 94%)",
+            color: "#181a2e",
+            fontWeight: 700,
+            borderRadius: 9,
+            fontFamily: "'Montserrat',Poppins,sans-serif",
+            fontSize: "1.1em",
+            border: "none",
+            boxShadow: "0 0 11px var(--secondary)",
+            letterSpacing: ".02em",
+            cursor: "pointer",
+            outline: "none",
+            transition: "background 0.18s",
+          }}
+          onClick={onClose}
+          autoFocus
+        >
+          Close
+        </button>
+      </div>
+      {/* Minimal modal animation style */}
+      <style>
+        {`
+        @keyframes fadeIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+        `}
+      </style>
+    </div>
+  );
+}
+
 function DigitalTwin() {
-  // Action handlers: (Stubbed for demo - add integration as needed)
+  // Modal state
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // PUBLIC_INTERFACE
+  // Show modal when any report action is triggered
   const handleAction = (type, item) => {
-    // Add more logic as needed (toast, backend, etc.)
-    alert(
-      `${type === "report" ? "Reported" : "Ignored"}: ${item.name || item.source}`
-    );
+    if (type === "report") {
+      setModalOpen(true);
+    }
+    // Ignore/other actions would go here in production
   };
+
+  const handleCloseModal = () => setModalOpen(false);
 
   return (
     <div className="container" style={{
@@ -82,6 +246,9 @@ function DigitalTwin() {
       minHeight: 510,
       color: "var(--text-primary)"
     }}>
+      {/* Report Modal */}
+      <ReportModal open={modalOpen} onClose={handleCloseModal} />
+
       {/* Page Title */}
       <h1
         className="title"
@@ -349,7 +516,7 @@ function DigitalTwin() {
         </div>
       </section>
 
-      {/* Responsive grid tweaks */}
+      {/* Custom Modal Styling */}
       <style>
         {`
         @media (max-width: 900px) {
@@ -362,6 +529,13 @@ function DigitalTwin() {
           .container {
             padding: 12px 0vw;
           }
+        }
+        .cyber-modal-backdrop {
+          animation: fadeIn 0.2s;
+        }
+        .cyber-modal:focus {
+          outline: 2.5px solid var(--primary);
+          box-shadow: 0 0 0 2px var(--accent);
         }
         `}
       </style>

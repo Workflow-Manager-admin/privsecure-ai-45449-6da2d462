@@ -10,10 +10,10 @@ Injecting EditorRootWrapper import: ../.ve/EditorRootWrapper
 asset bundle.js 1.87 MiB [emitted] (name: main)
 asset index.html 682 bytes [emitted]
 runtime modules 28.7 KiB 15 modules
-cacheable modules 1.67 MiB
+cacheable modules 1.66 MiB
   modules by path ./node_modules/ 1.54 MiB 34 modules
-  modules by path ./src/ 114 KiB
-    modules by path ./src/pages/*.js 62.5 KiB 13 modules
+  modules by path ./src/ 112 KiB
+    modules by path ./src/pages/*.js 61.3 KiB 13 modules
     modules by path ./src/widgets/*.js 22.8 KiB 5 modules
     modules by path ./src/*.css 17.5 KiB 4 modules
     modules by path ./src/*.js 7.42 KiB 2 modules
@@ -22,24 +22,14 @@ cacheable modules 1.67 MiB
     modules by path ./.ve/*.js 10.6 KiB 2 modules
     modules by path ./.ve/*.css 2.93 KiB 2 modules
     ./.ve/EditorOverlay.jsx 1.58 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 1589 ms
+webpack 5.99.9 compiled successfully in 1669 ms
 assets by status 682 bytes [cached] 1 asset
-assets by path *.js 1.89 MiB
+assets by path *.js 1.9 MiB
   asset bundle.js 1.87 MiB [emitted] (name: main)
-  asset main.ce0105fb5bee2348f061.hot-update.js 18.7 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.ce0105fb5bee2348f061.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 1.89 MiB = bundle.js 1.87 MiB main.ce0105fb5bee2348f061.hot-update.js 18.7 KiB
+  asset main.91c1b0bbf68d9193a72c.hot-update.js 23.9 KiB [emitted] [immutable] [hmr] (name: main)
+asset main.91c1b0bbf68d9193a72c.hot-update.json 28 bytes [emitted] [immutable] [hmr]
+Entrypoint main 1.9 MiB = bundle.js 1.87 MiB main.91c1b0bbf68d9193a72c.hot-update.js 23.9 KiB
 cached modules 1.65 MiB [cached] 64 modules
 runtime modules 28.7 KiB 15 modules
-./src/pages/DigitalTwin.js 14.4 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 181 ms
-assets by status 682 bytes [cached] 1 asset
-assets by path *.js 1.88 MiB
-  asset bundle.js 1.87 MiB [emitted] (name: main)
-  asset main.a6c4b3f7485ce2c392cd.hot-update.js 18 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.a6c4b3f7485ce2c392cd.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 1.88 MiB = bundle.js 1.87 MiB main.a6c4b3f7485ce2c392cd.hot-update.js 18 KiB
-cached modules 1.65 MiB [cached] 64 modules
-runtime modules 28.7 KiB 15 modules
-./src/pages/DigitalTwin.js 13.8 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 127 ms
+./src/pages/DigitalTwin.js 18.9 KiB [built] [code generated]
+webpack 5.99.9 compiled successfully in 249 ms

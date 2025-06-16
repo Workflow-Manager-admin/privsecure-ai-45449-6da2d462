@@ -106,11 +106,29 @@ function TrustScore({ score, label, color }) {
   );
 }
 
-// Revoke Modal implementation
+/**
+ * RevokeModal: Accessible, themed confirmation modal for app revoke flow.
+ * Props:
+ *   - open: If true, modal is shown
+ *   - app: App object (with .name)
+ *   - permissions: permission summary array
+ *   - onConfirm: function (id) to call when confirmed
+ *   - onCancel: function to close/cancel
+ *
+ * Theme: app's white, deep teal, light teal; rounded corners, drop shadow, focus trap, accessible close
+ */
 function RevokeModal({ open, app, permissions, onConfirm, onCancel }) {
   const modalRef = useRef(null);
 
-  // Accessibility: Trap focus to modal
+  // ESC to close
+  useEffect(() => {
+    if (!open) return;
+    const handleEsc = (e) => { if (e.key === "Escape") onCancel(); };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [open, onCancel]);
+
+  // Focus trap: focus modal on open, restore after
   useEffect(() => {
     if (!open) return;
     const prev = document.activeElement;
@@ -121,43 +139,46 @@ function RevokeModal({ open, app, permissions, onConfirm, onCancel }) {
   if (!open || !app) return null;
   return (
     <div
-      style={{
-        position: "fixed",
-        zIndex: 9999,
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        background: "rgba(12,34,36,0.38)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        animation: "fadeIn 0.18s"
-      }}
+      className="themed-confirm-modal-backdrop"
       aria-modal="true"
+      aria-labelledby="revoke-modal-title"
       role="dialog"
       tabIndex={-1}
+      style={{
+        position: "fixed",
+        zIndex: 12000,
+        top: 0, left: 0, width: "100vw", height: "100vh",
+        background: "rgba(12,34,36,0.36)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        transition: "background 0.18s",
+        animation: "fadeModalIn .19s"
+      }}
+      onClick={onCancel}
     >
+      {/* "Portal" modal inner – prevents propagation of outer click */}
       <div
         ref={modalRef}
         role="document"
         tabIndex={0}
-        aria-labelledby="revoke-app-name"
+        aria-modal="true"
+        aria-labelledby="revoke-modal-title"
+        onClick={e => e.stopPropagation()}
         style={{
-          minWidth: 347,
+          minWidth: 345,
           maxWidth: "96vw",
           background: "var(--background)",
           border: "2.7px solid var(--primary)",
           borderTop: "12px solid var(--primary)",
-          borderRadius: "18px",
-          boxShadow: "0 4px 32px 0 rgba(19,185,185,0.14), 0 8px 48px 0 rgba(5,92,92,0.19)",
+          borderRadius: 17,
+          boxShadow: "0 4px 32px 0 rgba(19,185,185,0.16), 0 8px 52px 0 rgba(5,92,92,0.17)",
           color: "var(--text-primary)",
-          padding: "36px 30px 32px",
+          padding: "36px 28px 31px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           position: "relative",
-          outline: "none"
+          outline: "none",
+          fontFamily: "'Poppins','Montserrat','Lato',sans-serif",
         }}
       >
         <button
@@ -165,7 +186,7 @@ function RevokeModal({ open, app, permissions, onConfirm, onCancel }) {
           aria-label="Close confirmation dialog"
           style={{
             position: "absolute",
-            top: 10,
+            top: 12,
             right: 13,
             background: "var(--accent)",
             color: "#fff",
@@ -173,11 +194,17 @@ function RevokeModal({ open, app, permissions, onConfirm, onCancel }) {
             borderRadius: "50%",
             width: 36,
             height: 36,
-            fontSize: "1.4rem",
-            fontWeight: 800,
+            fontSize: "1.44rem",
+            fontWeight: 900,
             lineHeight: "1",
-            boxShadow: "0 0 0 3px var(--surface), 0 4px 14px 2px var(--primary)",
-            cursor: "pointer"
+            boxShadow: "0 0 0 3px var(--surface), 0 4px 16px 2px var(--primary)",
+            cursor: "pointer",
+            zIndex: 11,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "background 0.18s, color 0.14s, box-shadow 0.18s",
+            outline: "none"
           }}
           onKeyDown={e => {
             if (e.key === "Enter" || e.key === " ") {
@@ -191,53 +218,44 @@ function RevokeModal({ open, app, permissions, onConfirm, onCancel }) {
         <div
           style={{
             fontWeight: 900,
-            fontSize: "1.23em",
+            fontSize: "1.22em",
             color: "var(--primary)",
             letterSpacing: ".04em",
             marginBottom: 9,
-            marginTop: 8,
-            textShadow: "0 0 8px var(--accent), 0 0 4px var(--surface)",
+            marginTop: 7,
+            textShadow: "0 0 10px var(--accent), 0 0 4px var(--surface)",
             textAlign: "center",
             fontFamily: "'Merriweather','Montserrat','Poppins',serif",
           }}
-          id="revoke-app-name"
+          id="revoke-modal-title"
         >
-          Are you sure you want to revoke access for
-          <br />
-          <span style={{ color: "var(--accent)", fontWeight: 900 }}>
-            {app.name}
-          </span>
-          ?
+          Confirm revoke access for <br />
+          <span style={{ color: "var(--accent)", fontWeight: 900 }}>{app.name}</span>?
         </div>
-
         <div
           style={{
             color: "var(--text-secondary)",
             fontFamily: "'Montserrat','Poppins','Lato',sans-serif",
             fontSize: "1.08em",
             background: "var(--surface)",
-            padding: "11px 12px 13px",
-            borderRadius: "12px",
+            padding: "12px 12px 11px",
+            borderRadius: "13px",
             fontWeight: 600,
             textAlign: "center",
-            marginBottom: 15,
-            marginTop: 3,
+            marginBottom: 16,
+            marginTop: 6,
             letterSpacing: ".03em",
-            border: "1.3px solid var(--accent)",
-            boxShadow: "0 2px 12px 0 var(--accent), 0 0 0.5px 1.5px #13b9b934 inset",
+            border: "1.35px solid var(--accent)",
+            boxShadow: "0 2.5px 13px 0 var(--accent), 0 0 1px 1.5px #13b9b934 inset",
           }}
         >
           <span style={{ color: "var(--primary)", fontWeight: 700 }}>
-            This will remove the following access:
+            You are about to remove these permissions:
           </span>
           <ul style={{
-            marginTop: 7,
-            marginBottom: 5,
-            textAlign: "left",
-            paddingLeft: 22,
-            color: "var(--secondary)",
-            fontSize: ".97em",
-            listStyle: "disc"
+            marginTop: 7, marginBottom: 6, textAlign: "left",
+            paddingLeft: 23, color: "var(--secondary)",
+            fontSize: ".97em", listStyle: "disc"
           }}>
             {permissions.map((perm, idx) => (
               <li key={idx}>{perm}</li>
@@ -247,7 +265,7 @@ function RevokeModal({ open, app, permissions, onConfirm, onCancel }) {
         <div
           style={{
             display: "flex",
-            gap: 19,
+            gap: 21,
             marginTop: 12,
             width: "100%",
             justifyContent: "center"
@@ -256,15 +274,15 @@ function RevokeModal({ open, app, permissions, onConfirm, onCancel }) {
           <button
             className="btn btn-large"
             style={{
-              background: "linear-gradient(95deg, var(--primary),var(--secondary) 85%)",
+              background: "linear-gradient(95deg, var(--primary),var(--secondary) 90%)",
               color: "#fff",
               fontWeight: 800,
               borderRadius: 10,
               padding: "12px 37px",
               fontFamily: "'Montserrat','Poppins',sans-serif",
-              fontSize: "1.06em",
+              fontSize: "1.08em",
               border: "none",
-              boxShadow: "0 0 12px 2px var(--primary), 0 0 6px 1px var(--accent)",
+              boxShadow: "0 0 15px 2px var(--primary), 0 0 7px 1.5px var(--accent)",
               letterSpacing: ".04em"
             }}
             autoFocus
@@ -275,28 +293,40 @@ function RevokeModal({ open, app, permissions, onConfirm, onCancel }) {
           <button
             className="btn"
             style={{
-              background: "linear-gradient(90deg, #e7f0fc 10%, var(--accent) 110%)",
+              background: "linear-gradient(94deg, #e7f2fc 9%, var(--accent) 111%)",
               color: "var(--primary)",
               fontWeight: 700,
               border: "1.3px solid var(--accent)",
               borderRadius: 10,
               padding: "12px 37px",
               fontFamily: "'Montserrat','Poppins',sans-serif",
-              letterSpacing: ".01em",
-              fontSize: "1.06em",
-              boxShadow: "0 0 8px 1.5px var(--accent)44 inset"
+              fontSize: "1.08em",
+              boxShadow: "0 0 8px 1.7px var(--accent)44 inset"
             }}
             onClick={onCancel}
+            tabIndex={0}
           >
             Cancel
           </button>
         </div>
       </div>
+      {/* Modal accessibility & animation */}
       <style>
         {`
-          @keyframes fadeIn {
+          @keyframes fadeModalIn {
             from { opacity: 0; }
             to { opacity: 1; }
+          }
+          .themed-confirm-modal-backdrop:focus {
+            outline: 2.5px solid var(--primary);
+          }
+          .themed-confirm-modal-backdrop button[aria-label="Close confirmation dialog"]:focus {
+            box-shadow: 0 0 0 4px var(--primary), 0 0 16px 4px var(--accent);
+            outline: 3px solid var(--accent);
+          }
+          .themed-confirm-modal-backdrop button:focus, .themed-confirm-modal-backdrop .btn:focus {
+            box-shadow: 0 0 0 2.2px var(--accent), 0 0 12px 2.7px var(--primary);
+            outline: 2.1px solid var(--accent);
           }
         `}
       </style>

@@ -11,11 +11,11 @@ asset bundle.js 3.44 MiB [emitted] (name: main)
 asset index.html 682 bytes [emitted]
 runtime modules 28.7 KiB 15 modules
 modules by path ./node_modules/ 2.2 MiB 600 modules
-modules by path ./src/ 231 KiB
-  modules by path ./src/pages/*.js 180 KiB 13 modules
+modules by path ./src/ 230 KiB
+  modules by path ./src/pages/*.js 179 KiB 12 modules
   modules by path ./src/widgets/*.js 22.8 KiB 5 modules
   modules by path ./src/*.css 17.5 KiB 4 modules
-  modules by path ./src/*.js 7.42 KiB 2 modules
+  modules by path ./src/*.js 7.18 KiB 2 modules
   modules by path ./src/components/*.js 3.28 KiB 2 modules
 modules by path ./.ve/ 15.1 KiB
   modules by path ./.ve/*.js 10.6 KiB 2 modules
@@ -23,66 +23,4 @@ modules by path ./.ve/ 15.1 KiB
     ./.ve/EditorOverlay.css 2.25 KiB [built] [code generated]
     ./node_modules/css-loader/dist/cjs.js!./.ve/EditorOverlay.css 697 bytes [built] [code generated]
   ./.ve/EditorOverlay.jsx 1.58 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 2482 ms
-assets by status 682 bytes [cached] 1 asset
-assets by path *.js 3.44 MiB
-  asset bundle.js 3.44 MiB [emitted] (name: main)
-  asset main.677cd0876d8a9702aaae.hot-update.js 4.36 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.677cd0876d8a9702aaae.hot-update.json 61 bytes [emitted] [immutable] [hmr]
-Entrypoint main 3.44 MiB = bundle.js 3.44 MiB main.677cd0876d8a9702aaae.hot-update.js 4.36 KiB
-cached modules 2.43 MiB [cached] 628 modules
-runtime modules 28.7 KiB 15 modules
-javascript modules 7.57 KiB
-  ./src/App.js 6.84 KiB [code generated]
-  ./src/pages/index.js 753 bytes [code generated]
-
-WARNING in ./src/App.js 167:37-53
-export 'PrivacyManifesto' (imported as 'PrivacyManifesto') was not found in './pages' (possible exports: ActionPlan, Badges, DarkWebLeaks, Dashboard, DigitalTwin, Disintegration, Login, Onboarding, Settings, SocialGraph, ThirdPartyApps)
- @ ./src/index.js 5:0-24 13:32-35
-
-ERROR in ./src/pages/index.js 13:0-65
-Module not found: Error: Can't resolve './PrivacyManifesto' in '/home/kavia/workspace/code-generation/privsecure-ai-45449-6da2d462/privsecure_ai_frontend/src/pages'
-resolve './PrivacyManifesto' in '/home/kavia/workspace/code-generation/privsecure-ai-45449-6da2d462/privsecure_ai_frontend/src/pages'
-  using description file: /home/kavia/workspace/code-generation/privsecure-ai-45449-6da2d462/privsecure_ai_frontend/package.json (relative path: ./src/pages)
-    Field 'browser' doesn't contain a valid alias configuration
-    using description file: /home/kavia/workspace/code-generation/privsecure-ai-45449-6da2d462/privsecure_ai_frontend/package.json (relative path: ./src/pages/PrivacyManifesto)
-      no extension
-        Field 'browser' doesn't contain a valid alias configuration
-        /home/kavia/workspace/code-generation/privsecure-ai-45449-6da2d462/privsecure_ai_frontend/src/pages/PrivacyManifesto doesn't exist
-      .js
-        Field 'browser' doesn't contain a valid alias configuration
-        /home/kavia/workspace/code-generation/privsecure-ai-45449-6da2d462/privsecure_ai_frontend/src/pages/PrivacyManifesto.js doesn't exist
-      .jsx
-        Field 'browser' doesn't contain a valid alias configuration
-        /home/kavia/workspace/code-generation/privsecure-ai-45449-6da2d462/privsecure_ai_frontend/src/pages/PrivacyManifesto.jsx doesn't exist
-      as directory
-        /home/kavia/workspace/code-generation/privsecure-ai-45449-6da2d462/privsecure_ai_frontend/src/pages/PrivacyManifesto doesn't exist
- @ ./src/App.js 5:0-175 79:31-36 94:31-41 119:37-46 125:37-47 131:37-48 137:37-51 143:37-49 149:37-48 155:37-51 161:37-43 167:37-53 173:37-45
- @ ./src/index.js 5:0-24 13:32-35
-
-webpack 5.99.9 compiled with 1 error and 1 warning in 167 ms
-assets by status 682 bytes [cached] 1 asset
-assets by path *.js 3.44 MiB
-  asset bundle.js 3.44 MiB [emitted] (name: main)
-  asset main.8a21967ce5802bf0a7a0.hot-update.js 4.17 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.8a21967ce5802bf0a7a0.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 3.44 MiB = bundle.js 3.44 MiB main.8a21967ce5802bf0a7a0.hot-update.js 4.17 KiB
-cached modules 2.44 MiB [cached] 629 modules
-runtime modules 28.7 KiB 15 modules
-./src/pages/index.js 687 bytes [built] [code generated]
-
-WARNING in ./src/App.js 167:37-53
-export 'PrivacyManifesto' (imported as 'PrivacyManifesto') was not found in './pages' (possible exports: ActionPlan, Badges, DarkWebLeaks, Dashboard, DigitalTwin, Disintegration, Login, Onboarding, Settings, SocialGraph, ThirdPartyApps)
- @ ./src/index.js 5:0-24 13:32-35
-
-webpack 5.99.9 compiled with 1 warning in 119 ms
-assets by status 682 bytes [cached] 1 asset
-assets by path *.js 3.45 MiB
-  asset bundle.js 3.44 MiB [emitted] (name: main)
-  asset main.5b8143052466a6de1b8b.hot-update.js 12.7 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.5b8143052466a6de1b8b.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 3.45 MiB = bundle.js 3.44 MiB main.5b8143052466a6de1b8b.hot-update.js 12.7 KiB
-cached modules 2.44 MiB [cached] 629 modules
-runtime modules 28.7 KiB 15 modules
-./src/App.js 6.6 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 122 ms
+webpack 5.99.9 compiled successfully in 2462 ms

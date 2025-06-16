@@ -4,7 +4,7 @@ import "../App.css";
 
 /**
  * PUBLIC_INTERFACE
- * Sidebar navigation for PrivSecure AI
+ * Sidebar navigation for EchoGuard
  * Persistent, cyber-style nav for all major feature pages.
  */
 const navLinks = [
@@ -26,7 +26,7 @@ function Sidebar() {
     <aside className="ps-sidebar">
       <div className="ps-sidebar-header">
         <span className="logo-symbol">⎓</span>
-        <span className="ps-sidebar-title">PrivSecure AI</span>
+        <span className="ps-sidebar-title">EchoGuard</span>
       </div>
       <nav className="ps-sidebar-nav">
         <ul>

@@ -1,6 +1,6 @@
 /**
  * Barrel file for pages.
- * Exports all placeholder feature pages for PrivSecure AI.
+ * Exports all placeholder feature pages for EchoGuard.
  */
 export { default as Dashboard } from "./Dashboard";
 export { default as ActionPlan } from "./ActionPlan";

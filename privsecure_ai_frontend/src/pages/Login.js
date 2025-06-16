@@ -1,181 +1,77 @@
 import React, { useState } from "react";
-import "../App.css";
 
 /**
  * PUBLIC_INTERFACE
- * Login: Cyber/dark themed login page for PrivSecure AI, supporting OAuth (placeholder) and email/password login.
- * Props:
- *   - onLogin: function to call on simulated login (passed in from App)
+ * Login page for EchoGuard
+ * Hero login, styled as cyber/privacy, demo only.
  */
 function Login({ onLogin }) {
-  // Simple local state for controlled email/password inputs
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  // Placeholder for showing 'error'
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Placeholder submit handler for email/password
-  const handleEmailLogin = (e) => {
+  function handleLogin(e) {
     e.preventDefault();
-    setError("");
-    // Fake validation: error if empty, success otherwise
-    if (!email.trim() || !password.trim()) {
-      setError("Please enter email and password.");
-      return;
-    }
-    // In a real app: API call here
-    onLogin && onLogin();
-  };
-
-  // Placeholder OAuth click (simulate OAuth login)
-  const handleOAuthLogin = (provider) => {
-    // Could show a short toast/modal, but just simulate login
-    onLogin && onLogin();
-  };
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      onLogin && onLogin();
+    }, 900);
+  }
 
   return (
-    <div
-      className="container"
-      style={{
-        marginTop: "120px",
-        maxWidth: 420,
-        background: "var(--surface)",
-        borderRadius: "var(--border-radius)",
-        boxShadow: "var(--box-shadow)",
-        padding: "36px 30px 34px",
-        color: "var(--text-primary)",
-        backdropFilter: "blur(6px)",
-      }}
-    >
-      <div style={{ textAlign: "center", marginBottom: 30 }}>
-        <span
-          className="logo-symbol"
-          style={{ fontSize: "2.3rem", color: "var(--accent)", textShadow: "0 0 30px var(--primary)" }}
-        >
-          ⎓
-        </span>
-        <div className="title" style={{ fontSize: "2.07rem", marginTop: 7, marginBottom: 0 }}>Sign in to PrivSecure AI</div>
-        <div className="subtitle" style={{ fontSize: "1rem", marginTop: 4, color: "var(--accent)" }}>
-          Cybersecurity, powered by privacy & AI.
+    <div className="container" style={{
+      marginTop: 0, maxWidth: 460, padding: 0, display: "flex", minHeight: "92vh", alignItems: "center"
+    }}>
+      <main className="page-main-surface" style={{
+        background: "var(--surface)", borderRadius: "var(--border-radius)", padding: "44px 28px 38px 28px",
+        boxShadow: "var(--box-shadow)", minHeight: 330, maxWidth: 430, margin: "0 auto", marginTop: 50, color: "var(--text-primary)"
+      }}>
+        <div className="hero" style={{
+          paddingTop: 26, paddingBottom: 24, textAlign: "center", gap: 0, marginBottom: 12, marginTop: -17
+        }}>
+          <span className="logo" style={{
+            color: "var(--primary)", fontWeight: 800, fontFamily: "'Montserrat', 'Poppins', Arial, sans-serif", letterSpacing: ".07em",
+            fontSize: "2.09rem", textShadow: "0 0 11px var(--secondary)", marginBottom: 13, display: "inline-flex", alignItems: "center"
+          }}>
+            <span className="logo-symbol" style={{ color: "var(--accent)", marginRight: 9, fontSize: "2.31rem" }}>⎓</span>
+            EchoGuard
+          </span>
+          <div className="subtitle" style={{
+            fontSize: "1.13rem", color: "var(--secondary)", fontWeight: 600, letterSpacing: ".09em", paddingTop: 2
+          }}>
+            AI-powered Digital Privacy & Cybersecurity
+          </div>
         </div>
-      </div>
 
-      {/* OAuth Buttons */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
-        <button
-          className="btn btn-large pulse-cyber"
-          style={{
-            background: "linear-gradient(90deg, #2326ffcc, #e725fc)",
-            color: "#fff",
-            fontWeight: 700,
-            letterSpacing: "0.02em",
-            marginBottom: 1,
-            boxShadow: "0 0 12px 1px #0ff5, 0 0 22px 1px #f0f3",
-          }}
-          onClick={() => handleOAuthLogin('google')}
-          type="button"
-        >
-          {/* Placeholder 'icon' for Google */}
-          <span
-            style={{
-              marginRight: 12,
-              verticalAlign: "middle",
-              fontSize: "1.05em",
-              filter: "drop-shadow(0 0 4px #fff8)",
-            }}
-          >🟢</span>
-          Login with Google
-        </button>
-
-        {/* Placeholder for future extra providers (shown faded-out) */}
-        <button
-          className="btn btn-large"
-          style={{
-            background: "linear-gradient(90deg, #31354a 40%, #23232b 100%)",
-            color: "var(--text-secondary)",
-            opacity: 0.45,
-            cursor: "not-allowed",
-            marginTop: 2,
-          }}
-          disabled
-          type="button"
-        >
-          {/* Placeholder MS/Apple (grayed) */}
-          <span style={{ marginRight: 12, fontSize: "1.05em" }}>⚪️</span>
-          Login with Microsoft (coming soon)
-        </button>
-      </div>
-
-      <div
-        className="divider"
-        style={{ margin: "22px 0", borderTop: "1px solid var(--border-color)", position: "relative" }}
-      >
-        <span
-          style={{
-            position: "absolute",
-            top: "-17px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            background: "var(--surface)",
-            color: "var(--text-secondary)",
-            padding: "0 14px",
-            fontSize: "0.98em",
-            letterSpacing: "0.02em",
-          }}
-        >
-          or
-        </span>
-      </div>
-
-      {/* Email/password form */}
-      <form autoComplete="off" onSubmit={handleEmailLogin} style={{ marginBottom: 8 }}>
-        <div style={{ marginBottom: 13 }}>
+        <form onSubmit={handleLogin} autoComplete="off" style={{ marginTop: 10 }}>
           <input
             type="email"
-            placeholder="Email"
-            autoComplete="username"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{ width: "100%", marginBottom: 8 }}
-            spellCheck={false}
+            placeholder="Email address"
             required
-            aria-label="Email"
+            style={{ width: "100%", marginBottom: 17 }}
           />
-        </div>
-        <div style={{ marginBottom: 12 }}>
           <input
             type="password"
             placeholder="Password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ width: "100%" }}
             required
-            aria-label="Password"
+            style={{ width: "100%" }}
           />
+          <button
+            type="submit"
+            className="btn btn-large"
+            style={{ marginTop: 17, marginBottom: 6, width: "100%" }}
+            disabled={loading}
+            aria-disabled={loading}
+          >
+            {loading ? "Signing in..." : "Login"}
+          </button>
+        </form>
+        <div style={{ marginTop: 18, textAlign: "center", color: "var(--text-secondary)", fontSize: ".99em" }}>
+          <span>Demo Only – No account needed.</span>
         </div>
-        {error && (
-          <div style={{ color: "#f45", marginBottom: 10, textShadow: "0 0 8px #f0f7", fontSize: "1.03em" }}>
-            {error}
-          </div>
-        )}
-        <button
-          className="btn btn-large"
-          type="submit"
-          style={{
-            width: "100%",
-            marginTop: "2px",
-            boxShadow: "0 0 12px 2px var(--primary)",
-            fontWeight: 800,
-            letterSpacing: "0.04em",
-          }}
-        >
-          Sign in with Email
-        </button>
-      </form>
-      <div style={{ fontSize: "0.99em", textAlign: "center", marginTop: 18, color: "var(--text-secondary)" }}>
-        Forgot password? <span style={{ color: "var(--primary)", cursor: "not-allowed", opacity: 0.6 }}>Recover (soon)</span>
-      </div>
+        <div style={{ marginTop: 11, textAlign: "center", color: "var(--accent)", fontWeight: 600, fontSize: "1.05em", opacity: 0.88 }}>
+          &copy; 2024 EchoGuard
+        </div>
+      </main>
     </div>
   );
 }

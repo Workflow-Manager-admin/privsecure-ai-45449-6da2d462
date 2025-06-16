@@ -109,7 +109,6 @@ function App() {
           <Route path="/social-graph" element={<SocialGraph />} />
           <Route path="/disintegration" element={<Disintegration />} />
           <Route path="/badges" element={<Badges />} />
-          <Route path="/privacy-manifesto" element={<PrivacyManifesto />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
         {/* Fallback: redirect to appropriate page */}

@@ -10,7 +10,6 @@ export { default as DarkWebLeaks } from "./DarkWebLeaks";
 export { default as SocialGraph } from "./SocialGraph";
 export { default as Disintegration } from "./Disintegration";
 export { default as Badges } from "./Badges";
-export { default as PrivacyManifesto } from "./PrivacyManifesto";
 export { default as Settings } from "./Settings";
 export { default as Login } from "./Login";
 export { default as Onboarding } from "./Onboarding";

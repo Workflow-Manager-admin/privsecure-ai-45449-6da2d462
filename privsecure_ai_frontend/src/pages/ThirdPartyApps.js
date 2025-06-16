@@ -351,7 +351,10 @@ function RevokeModal({ open, app, permissions, onConfirm, onCancel }) {
   );
 }
 
-// Notification/Undo bar
+/**
+ * PostRevokeNotification: Themed notification bar with Undo button, visible for 10s, dismissed by Undo or after timeout.
+ * Accessibility: aria-live polite. Undo disables if timeout reached.
+ */
 function PostRevokeNotification({ app, onUndo, visible }) {
   if (!visible || !app) return null;
   return (
@@ -373,9 +376,12 @@ function PostRevokeNotification({ app, onUndo, visible }) {
         display: "flex",
         alignItems: "center",
         fontWeight: 700,
-        fontSize: "1.01em"
+        fontSize: "1.01em",
+        animation: "fadeInUndoBar .21s cubic-bezier(.84,0,.22,1.11)"
       }}
       aria-live="polite"
+      role="status"
+      tabIndex={0}
     >
       <span style={{ marginRight: 11 }}>
         ✔️ Access successfully revoked for <span style={{ color: "var(--accent)" }}>{app.name}</span>
@@ -397,10 +403,18 @@ function PostRevokeNotification({ app, onUndo, visible }) {
             cursor: "pointer"
           }}
           onClick={onUndo}
+          autoFocus
         >
           Undo
         </button>
       )}
+      {/* Style for notification animation */}
+      <style>{`
+        @keyframes fadeInUndoBar {
+          from { opacity: 0; transform: translateX(-50%) translateY(25px);}
+          to { opacity: 1; transform: translateX(-50%) translateY(0);}
+        }
+      `}</style>
     </div>
   );
 }
@@ -619,8 +633,16 @@ function ThirdPartyApps() {
     // Undo (store full snapshot so undo is robust)
     if (postRevoke.undoTimer) clearTimeout(postRevoke.undoTimer);
     const app = apps.find(a => a.id === appId);
+    // Setup undo timeout to hide notification after 10 seconds
     const undoTimeout = setTimeout(() => {
-      setPostRevoke(pr => ({ ...pr, visible: false, app: null, undoTimer: null, prevApps: null, prevScore: null }));
+      setPostRevoke(pr => ({
+        ...pr,
+        visible: false,
+        app: null,
+        undoTimer: null,
+        prevApps: null,
+        prevScore: null
+      }));
     }, 10000);
     setPostRevoke({
       app,
@@ -637,13 +659,16 @@ function ThirdPartyApps() {
   // Undo logic: restore previous apps list, revokedIds, and score
   const handleUndo = () => {
     if (!postRevoke.app || !postRevoke.prevApps) return;
+    // Restore everything to before-revoke state
     setApps(postRevoke.prevApps);
     // Remove appId from revoked
     const restoredRevoked = revokedIds.filter(id => id !== postRevoke.app.id);
     setRevokedIds(restoredRevoked);
     setScore(postRevoke.prevScore ?? calculatePrivacyScore(postRevoke.prevApps, restoredRevoked));
+    saveAppsState("psai-apps-list", postRevoke.prevApps);
     saveAppsState("psai-revoked-ids", restoredRevoked);
     saveAppsState("psai-privacy-score", postRevoke.prevScore ?? calculatePrivacyScore(postRevoke.prevApps, restoredRevoked));
+    // Hide notification and clean timer immediately
     setPostRevoke((pr) => {
       if (pr.undoTimer) clearTimeout(pr.undoTimer);
       return { app: null, visible: false, undoTimer: null, prevApps: null, prevScore: null };

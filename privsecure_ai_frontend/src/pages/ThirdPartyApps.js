@@ -1,5 +1,22 @@
 import React, { useState, useRef, useEffect } from "react";
 
+// PUBLIC_INTERFACE
+// Utility: Local storage persistence helpers
+function saveAppsState(key, value) {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {}
+}
+
+function loadAppsState(key, fallback) {
+  try {
+    const raw = window.localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
 // Permissions mapping for readable summary by accessLevel mock (extensible)
 const PERMISSIONS_MAP = {
   "Full Drive Access": ["Read/write", "All files (Drive)", "Profile", "Email"],
@@ -537,57 +554,120 @@ function AppCard({ app, onRevokeClick, revoked, disabled }) {
   );
 }
 
-// PUBLIC_INTERFACE
-// ThirdPartyApps with revoke confirmation modal + undo notification + app card update
+/*
+  Subtask extended workflow: On confirm revoke:
+    - Simulate async API delay.
+    - Remove or grey out the app card (choose behavior: REMOVE = card gone; GREY = disables + greys).
+    - Update privacy score/risk UI indicator.
+    - Persist new state locally.
+    - Show notification: 'Access successfully revoked for [App Name].' with Undo (10 sec).
+    - Undo must restore previous app list/state and risk.
+*/
 function ThirdPartyApps() {
-  // State: apps, revokedAppIds, modal state, notification (undo) timer, etc.
-  const [apps, setApps] = useState(MOCK_APPS.map(a => ({ ...a })));
-  const [revokedIds, setRevokedIds] = useState([]); // list of revoked app ids
-  const [modal, setModal] = useState({ open: false, app: null });
-  const [postRevoke, setPostRevoke] = useState({ app: null, visible: false, undoTimer: null });
+  // Try to initialize from localStorage or fallback to defaults
+  const [apps, setApps] = useState(() =>
+    loadAppsState("psai-apps-list", MOCK_APPS.map(a => ({ ...a })))
+  );
+  const [revokedIds, setRevokedIds] = useState(() =>
+    loadAppsState("psai-revoked-ids", [])
+  );
+  // Persist simplistic privacy score/risk; real product would fetch/calculate dynamic per profile
+  const [score, setScore] = useState(() =>
+    loadAppsState("psai-privacy-score", calculatePrivacyScore(MOCK_APPS, [])
+  ));
 
-  // Handler for clicking Revoke
+  const [modal, setModal] = useState({ open: false, app: null });
+  const [postRevoke, setPostRevoke] = useState({ app: null, visible: false, undoTimer: null, prevApps: null, prevScore: null });
+
+  // PUBLIC_INTERFACE
+  // Calculate pseudo "privacy score": just average unrevoked app trust for demo
+  function calculatePrivacyScore(appList, revokedList) {
+    const unrevoked = appList.filter(a => !revokedList.includes(a.id));
+    if (unrevoked.length === 0) return 0;
+    return Math.round(
+      unrevoked.reduce((sum, app) => sum + (app.trust || 0), 0) / unrevoked.length
+    );
+  }
+
+  // Handler for clicking Revoke (open modal)
   const handleRevokeClick = (app) => {
     setModal({ open: true, app });
   };
 
-  // Confirm revoke (fake API), then show notification + update cards
-  const handleRevokeConfirm = (appId) => {
+  // Async "API" revoke simulation
+  async function handleRevokeConfirm(appId) {
     setModal({ open: false, app: null });
+    // Store current state for potential undo
+    const prevApps = [...apps];
+    const prevRevoked = [...revokedIds];
+    const prevScore = score;
+    // Option 1: Remove the card
+    // Option 2: Grey out (we choose "grey out and disable" here for clarity)
+    // Simulate "API" progress (UI could show spinner, but keep simple)
+    await new Promise(res => setTimeout(res, 1200)); // 1.2s fake delay
 
-    // Find the app
-    const app = apps.find(a => a.id === appId);
+    // Apply revoke: add to revoked array
+    const nextRevoked = [...revokedIds, appId];
+    setRevokedIds(nextRevoked);
+    // Privacy score: decrease as risky apps are removed (simply recalc)
+    const newScore = calculatePrivacyScore(apps, nextRevoked);
+    setScore(newScore);
+    // Persist both
+    saveAppsState("psai-revoked-ids", nextRevoked);
+    saveAppsState("psai-privacy-score", newScore);
 
-    // Simulate API + update state
-    setRevokedIds(prev => [...prev, appId]);
-    // Undo: show notification; store timer to hide after 10s
+    // Undo (store full snapshot so undo is robust)
     if (postRevoke.undoTimer) clearTimeout(postRevoke.undoTimer);
+    const app = apps.find(a => a.id === appId);
     const undoTimeout = setTimeout(() => {
-      setPostRevoke(pr => ({ ...pr, visible: false, app: null, undoTimer: null }));
+      setPostRevoke(pr => ({ ...pr, visible: false, app: null, undoTimer: null, prevApps: null, prevScore: null }));
     }, 10000);
-    setPostRevoke({ app, visible: true, undoTimer: undoTimeout });
-  };
+    setPostRevoke({
+      app,
+      visible: true,
+      undoTimer: undoTimeout,
+      prevApps: prevApps,
+      prevScore: prevScore
+    });
+  }
 
   // Cancel modal
   const handleModalCancel = () => setModal({ open: false, app: null });
 
-  // Undo logic: remove appId from revoked, cancel notification
+  // Undo logic: restore previous apps list, revokedIds, and score
   const handleUndo = () => {
-    if (!postRevoke.app) return;
-    setRevokedIds(ids => ids.filter(id => id !== postRevoke.app.id));
+    if (!postRevoke.app || !postRevoke.prevApps) return;
+    setApps(postRevoke.prevApps);
+    // Remove appId from revoked
+    const restoredRevoked = revokedIds.filter(id => id !== postRevoke.app.id);
+    setRevokedIds(restoredRevoked);
+    setScore(postRevoke.prevScore ?? calculatePrivacyScore(postRevoke.prevApps, restoredRevoked));
+    saveAppsState("psai-revoked-ids", restoredRevoked);
+    saveAppsState("psai-privacy-score", postRevoke.prevScore ?? calculatePrivacyScore(postRevoke.prevApps, restoredRevoked));
     setPostRevoke((pr) => {
       if (pr.undoTimer) clearTimeout(pr.undoTimer);
-      return { app: null, visible: false, undoTimer: null };
+      return { app: null, visible: false, undoTimer: null, prevApps: null, prevScore: null };
     });
   };
 
-  // Cleanup timer (on unmount)
+  // Persist revokedIds + apps whenever change (for page reload resilience)
+  useEffect(() => {
+    saveAppsState("psai-apps-list", apps);
+  }, [apps]);
+  useEffect(() => {
+    saveAppsState("psai-revoked-ids", revokedIds);
+  }, [revokedIds]);
+  useEffect(() => {
+    saveAppsState("psai-privacy-score", score);
+  }, [score]);
+
+  // Cleanup timer on unmount
   useEffect(() => {
     return () => {
       if (postRevoke.undoTimer) clearTimeout(postRevoke.undoTimer);
     };
-    // eslint-disable-next-line
-  }, []);
+  }, [postRevoke.undoTimer]);
+
 
   // Modal: permission summary for current app (for accessLevel)
   const modalPermissions =
@@ -596,6 +676,50 @@ function ThirdPartyApps() {
       : modal.app
       ? modal.app.accessLevel.split(/\s*,\s*|\s*;\s*/)
       : [];
+
+  // PRIVACY SCORE BADGE/BAR at top (simulate effect of revoking)
+  function PrivacyScoreRiskIndicator() {
+    let label = "High";
+    let color = "#0fdbae";
+    let bgGradient = "linear-gradient(90deg,#f2fcff 80%,#e3fbfb 100%)";
+    if (score <= 70 && score > 50) {
+      label = "Medium"; color = "#13b9b9";
+      bgGradient = "linear-gradient(90deg,#f7fdfc 60%,#e6fbea 100%)";
+    } else if (score <= 50 && score > 30) {
+      label = "Low"; color = "#E87A41";
+      bgGradient = "linear-gradient(90deg,#f8f5f9 75%,#ffe7ec 100%)";
+    } else if (score <= 30) {
+      label = "Critical"; color = "#ff4e8a";
+      bgGradient = "linear-gradient(90deg,#fcf3fb 80%,#ffe1f3 100%)";
+    }
+    return (
+      <div style={{
+        display: "flex", alignItems: "center", gap: 12, marginBottom: 37,
+        background: bgGradient, borderRadius: 14, boxShadow: "0 6px 24px 1px " + color + "13",
+        padding: "16px 32px 15px 22px", border: "1.7px solid " + color, width: 330, maxWidth: "99vw"
+      }} aria-label={`Privacy exposure score: ${score}. Risk: ${label}`}>
+        <span style={{
+          fontWeight: 700, fontFamily: "'Montserrat',sans-serif", letterSpacing: ".03em",
+          color: color, fontSize: "1.08em"
+        }}>
+          <span style={{ fontSize: "1.3em", marginRight: 8 }}>🛡️</span>
+          Privacy Risk:
+        </span>
+        <span style={{
+          marginLeft: 6, color, fontWeight: 900, fontSize: "1.23em",
+          letterSpacing: ".03em"
+        }}>
+          {label}
+        </span>
+        <span style={{
+          borderRadius: 7, background: color + "16", color: color, marginLeft: 9,
+          fontWeight: 600, fontSize: "1.04em", padding: "2px 12px"
+        }}>
+          {score}/100
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="container" style={{
@@ -624,6 +748,10 @@ function ThirdPartyApps() {
       >
         Third-Party App Scanner
       </h1>
+
+      {/* Updated Privacy Score/Risk Indicator */}
+      <PrivacyScoreRiskIndicator />
+
       <div
         className="subtitle"
         style={{

@@ -18,6 +18,7 @@ const navLinks = [
   { path: "/badges", label: "Badge System" },
   { path: "/settings", label: "Settings & Reports" },
 ];
+// No Privacy Manifesto link present in navigation.
 
 function Sidebar() {
   return (

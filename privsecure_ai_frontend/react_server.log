@@ -12,8 +12,8 @@ asset index.html 682 bytes [emitted]
 runtime modules 28.7 KiB 15 modules
 cacheable modules 1.7 MiB
   modules by path ./node_modules/ 1.54 MiB 34 modules
-  modules by path ./src/ 149 KiB
-    modules by path ./src/pages/*.js 97.6 KiB 13 modules
+  modules by path ./src/ 150 KiB
+    modules by path ./src/pages/*.js 98.4 KiB 13 modules
     modules by path ./src/widgets/*.js 22.8 KiB 5 modules
     modules by path ./src/*.css 17.5 KiB 4 modules
     modules by path ./src/*.js 7.42 KiB 2 modules
@@ -22,34 +22,36 @@ cacheable modules 1.7 MiB
     modules by path ./.ve/*.js 10.6 KiB 2 modules
     modules by path ./.ve/*.css 2.93 KiB 2 modules
     ./.ve/EditorOverlay.jsx 1.58 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 1666 ms
-assets by status 682 bytes [cached] 1 asset
-assets by path *.js 1.94 MiB
-  asset bundle.js 1.91 MiB [emitted] (name: main)
-  asset main.c269eb92e7668d0e5df0.hot-update.js 36.5 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.c269eb92e7668d0e5df0.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 1.94 MiB = bundle.js 1.91 MiB main.c269eb92e7668d0e5df0.hot-update.js 36.5 KiB
-cached modules 1.67 MiB [cached] 64 modules
-runtime modules 28.7 KiB 15 modules
-./src/pages/ThirdPartyApps.js 30.1 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 258 ms
-assets by status 682 bytes [cached] 1 asset
-assets by path *.js 1.94 MiB
-  asset bundle.js 1.91 MiB [emitted] (name: main)
-  asset main.9e95e3069bb1e7890b70.hot-update.js 36.6 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.9e95e3069bb1e7890b70.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 1.94 MiB = bundle.js 1.91 MiB main.9e95e3069bb1e7890b70.hot-update.js 36.6 KiB
-cached modules 1.67 MiB [cached] 64 modules
-runtime modules 28.7 KiB 15 modules
-./src/pages/ThirdPartyApps.js 30.2 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 149 ms
+webpack 5.99.9 compiled successfully in 1742 ms
 assets by status 682 bytes [cached] 1 asset
 assets by path *.js 1.95 MiB
   asset bundle.js 1.91 MiB [emitted] (name: main)
-  asset main.43759d48cb3ec2d80fb5.hot-update.js 37.3 KiB [emitted] [immutable] [hmr] (name: main)
-asset main.43759d48cb3ec2d80fb5.hot-update.json 28 bytes [emitted] [immutable] [hmr]
-Entrypoint main 1.95 MiB = bundle.js 1.91 MiB main.43759d48cb3ec2d80fb5.hot-update.js 37.3 KiB
+  asset main.05b352429e21d349f5b1.hot-update.js 37.4 KiB [emitted] [immutable] [hmr] (name: main)
+asset main.05b352429e21d349f5b1.hot-update.json 28 bytes [emitted] [immutable] [hmr]
+Entrypoint main 1.95 MiB = bundle.js 1.91 MiB main.05b352429e21d349f5b1.hot-update.js 37.4 KiB
 cached modules 1.67 MiB [cached] 64 modules
 runtime modules 28.7 KiB 15 modules
-./src/pages/ThirdPartyApps.js 30.8 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 118 ms
+./src/pages/ThirdPartyApps.js 30.9 KiB [built] [code generated]
+webpack 5.99.9 compiled successfully in 214 ms
+assets by status 1.91 MiB [cached] 2 assets
+cached modules 1.67 MiB (javascript) 28.7 KiB (runtime) [cached] 79 modules
+./src/pages/ThirdPartyApps.js 30.9 KiB [built]
+webpack 5.99.9 compiled successfully in 143 ms
+assets by status 1.91 MiB [cached] 2 assets
+cached modules 1.67 MiB (javascript) 28.7 KiB (runtime) [cached] 79 modules
+./src/pages/ThirdPartyApps.js 30.9 KiB [built]
+webpack 5.99.9 compiled successfully in 105 ms
+assets by status 1.91 MiB [cached] 2 assets
+cached modules 1.67 MiB (javascript) 28.7 KiB (runtime) [cached] 79 modules
+./src/pages/ThirdPartyApps.js 30.9 KiB [built]
+webpack 5.99.9 compiled successfully in 81 ms
+assets by status 682 bytes [cached] 1 asset
+assets by path *.js 1.95 MiB
+  asset bundle.js 1.91 MiB [emitted] (name: main)
+  asset main.a331a78023fbc3a1c0ee.hot-update.js 39.5 KiB [emitted] [immutable] [hmr] (name: main)
+asset main.a331a78023fbc3a1c0ee.hot-update.json 28 bytes [emitted] [immutable] [hmr]
+Entrypoint main 1.95 MiB = bundle.js 1.91 MiB main.a331a78023fbc3a1c0ee.hot-update.js 39.5 KiB
+cached modules 1.67 MiB [cached] 64 modules
+runtime modules 28.7 KiB 15 modules
+./src/pages/ThirdPartyApps.js 32.6 KiB [built] [code generated]
+webpack 5.99.9 compiled successfully in 124 ms

@@ -176,11 +176,214 @@ function TrustScore({ score, label, color }) {
   );
 }
 
-// RevokeModal (unchanged from original)
+/**
+ * PUBLIC_INTERFACE
+ * Themed modal for the "Replace" flow: opens with a curated list of mock alternative apps for the selected app's category.
+ * Shows name, logo, privacy score, core features, and download/integrate link.
+ */
+function ReplaceAlternativeModal({ open, onClose, app, alternatives, onChooseAlternative }) {
+  const modalRef = useRef(null);
 
-// ... (Insert RevokeModal, PostRevokeNotification components here, unchanged; omitted for brevity due to length limit. The actual implementation simply reuses the code from the original file. See prompt for full component.)
-// For this output, skip to AppCard definition with Replace support.
+  useEffect(() => {
+    if (open && modalRef.current) {
+      modalRef.current.focus();
+    }
+  }, [open]);
 
+  if (!open || !app) return null;
+
+  // Fallback category if not in APP_CATEGORIES
+  const category = APP_CATEGORIES[app.name] || "cloud";
+  const altList = (alternatives && alternatives.length > 0) ? alternatives : (ALTERNATIVE_APPS[category] || []);
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      tabIndex={-1}
+      className="replace-alt-modal-backdrop"
+      style={{
+        position: "fixed",
+        zIndex: 9000,
+        top: 0, left: 0, width: "100vw", height: "100vh",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        background: "rgba(12,34,36,0.51)",
+      }}
+      onClick={onClose}
+    >
+      <div
+        ref={modalRef}
+        tabIndex={0}
+        className="replace-alt-modal"
+        role="document"
+        style={{
+          minWidth: 380,
+          maxWidth: "98vw",
+          background: "var(--background)",
+          border: "2.7px solid var(--primary)",
+          borderTop: "18px solid var(--accent)",
+          borderRadius: "22px",
+          boxShadow: "0 8px 45px 0 rgba(19,185,185,0.12), 0 8px 44px 0 rgba(5,92,92,0.24)",
+          color: "var(--text-primary)",
+          fontFamily: "'Poppins','Montserrat','Lato','Raleway','Arial',sans-serif",
+          padding: "36px 38px 32px",
+          zIndex: 10001,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          position: "relative",
+          outline: "none",
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        <button
+          aria-label="Close alternatives dialog"
+          onClick={onClose}
+          style={{
+            position: "absolute", top: 13, right: 16,
+            width: 39, height: 39, background: "var(--accent)",
+            color: "#fff", border: "none", borderRadius: "50%",
+            fontSize: "1.67rem", fontWeight: 900, cursor: "pointer",
+            boxShadow: "0 0 0 4px var(--surface), 0 4px 18px 2px var(--primary)"
+          }}
+        ><span aria-hidden="true">&times;</span></button>
+        <div style={{
+          fontWeight: 800,
+          fontSize: "1.36em",
+          color: "var(--primary)",
+          letterSpacing: ".05em",
+          marginBottom: 11,
+          marginTop: 2,
+          textShadow: "0 0 10px var(--accent), 0 0 4px var(--surface)",
+          fontFamily: "'Merriweather','Montserrat','Poppins',serif"
+        }}>{`Recommended Alternatives for "${app.name}"`}</div>
+        <div style={{
+          color: "var(--secondary)",
+          fontFamily: "'Montserrat',sans-serif",
+          fontSize: "1.05em",
+          marginBottom: 14,
+          letterSpacing: ".02em"
+        }}>
+          Select a trusted alternative below to replace your current app. All options meet high privacy standards.
+        </div>
+        <div className="alt-modal-list" style={{
+          width: "100%",
+          display: "flex", flexDirection: "column", gap: 18,
+          marginBottom: 10,
+        }}>
+          {altList.map((alt, idx) => (
+            <div
+              key={alt.id || alt.name || idx}
+              className="card"
+              style={{
+                background: "#f9fcff",
+                border: "1.5px solid var(--border-color)",
+                borderRadius: 13,
+                boxShadow: "0 0 7px 2px var(--accent)55",
+                display: "flex", alignItems: "center",
+                padding: "14px 13px", gap: 15,
+                marginBottom: 2, width: "100%", maxWidth: 540
+              }}
+            >
+              <img src={alt.logo} alt={alt.name + " logo"} style={{
+                width: 48, height: 48, borderRadius: 9,
+                border: "2px solid var(--primary)",
+                boxShadow: "0 0 9px 2px var(--accent)22",
+                background: "#f7f6ff", marginRight: 2
+              }} />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{
+                  fontWeight: 700, color: "var(--primary)",
+                  fontFamily: "'Montserrat',sans-serif", fontSize: "1.1em"
+                }}>{alt.name}</div>
+                <div style={{
+                  color: "var(--secondary)",
+                  fontSize: ".96em",
+                  marginBottom: 2, marginTop: 0
+                }}>
+                  Privacy Score: <strong>{alt.privacyScore}</strong> / 100
+                  <span style={{
+                    marginLeft: 11,
+                    background: "var(--accent)",
+                    color: "#fff",
+                    fontWeight: 700, borderRadius: 5,
+                    padding: "2.7px 9px",
+                    fontSize: ".91em",
+                  }}>{alt.trustLabel}</span>
+                </div>
+                <div style={{
+                  fontSize: ".94em", color: "#247", marginBottom: 2
+                }}>
+                  Features: {alt.features.slice(0, 3).join(", ")}
+                </div>
+                <div style={{
+                  fontSize: ".93em",
+                  color: "#36ab5b",
+                  opacity: .77,
+                }}>
+                  Permissions: <span style={{ color: "#267" }}>{(alt.permissions || []).join(", ")}</span>
+                </div>
+              </div>
+              <div style={{
+                display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, minWidth: 110
+              }}>
+                <a
+                  href={alt.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn"
+                  style={{
+                    background: "linear-gradient(93deg, var(--primary) 62%, var(--secondary) 100%)",
+                    color: "#fff",
+                    borderRadius: 8, fontSize: '.98em',
+                    fontWeight: 700,
+                    padding: "8px 14px", boxShadow: "0 0 9px 2px var(--primary)",
+                    marginBottom: 4, textAlign: "center", outline: "none", display: "block"
+                  }}
+                >
+                  Download / Learn More
+                </a>
+                <button
+                  className="btn"
+                  style={{
+                    background: "linear-gradient(98deg, #e4fff0, var(--accent))",
+                    color: "var(--primary)", border: "1.2px solid var(--primary)",
+                    borderRadius: 8, fontWeight: 700,
+                    padding: "8px 14px", outline: "none",
+                  }}
+                  onClick={() => onChooseAlternative && onChooseAlternative(alt)}
+                >
+                  Replace with {alt.name}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+        <span style={{
+          marginTop: 3, color: "var(--secondary)", fontWeight: 500, fontSize: ".99em"
+        }}>
+          Swapping to a higher-trust app grants you privacy points and a badge!
+        </span>
+      </div>
+      <style>
+        {`
+        .replace-alt-modal-backdrop { animation: fadeIn 0.14s; }
+        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+        .replace-alt-modal:focus {
+          outline: 2px solid var(--accent);
+          box-shadow: 0 0 0 2px var(--primary), 0 0 18px 3px var(--accent);
+        }
+        .replace-alt-modal button[aria-label="Close alternatives dialog"]:focus {
+          box-shadow: 0 0 0 5px var(--primary), 0 0 18px 4px var(--accent);
+          outline: 3px solid var(--accent);
+        }
+        `}
+      </style>
+    </div>
+  );
+}
+
+// --- REPLACE AppCard Replace logic to open modal ---
 function AppCard({ app, onRevokeClick, onReplaceClick, revoked, replaced, replacedBy, disabled }) {
   return (
     <div
